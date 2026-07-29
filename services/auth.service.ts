@@ -1,35 +1,78 @@
-import { axiosInstance } from '@/lib/axiosInstance';
-import { ApiResponse, IUser } from '@/types';
-import Cookies from 'js-cookie';
+export interface RegisterPayload {
+  name: string;
+  email: string;
+  phone: string;
+  role: "CUSTOMER" | "TECHNICIAN";
+  password: string;
+}
 
-// Login Payload Interface
 export interface LoginPayload {
   email: string;
   password: string;
 }
 
+export interface ApiResponse<T = unknown> {
+  success: boolean;
+  message: string;
+  data: T;
+}
+
 export interface LoginResponseData {
-  accessToken: string;
-  user: IUser;
+  token: string;
+  user: {
+    id: string;
+    name: string;
+    email: string;
+    role: "ADMIN" | "CUSTOMER" | "TECHNICIAN";
+  };
 }
 
 export const authService = {
-  async login(payload: LoginPayload) {
-    const response = await axiosInstance.post<ApiResponse<LoginResponseData>>(
-      '/auth/login',
-      payload
+  async register(payload: RegisterPayload): Promise<ApiResponse> {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/auth/register`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      },
     );
 
-    if (response.data.data?.accessToken) {
-      Cookies.set('accessToken', response.data.data.accessToken, { expires: 7 });
-      Cookies.set('user', JSON.stringify(response.data.data.user), { expires: 7 });
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.message || "Registration failed");
     }
 
-    return response.data;
+    return data;
   },
 
+  //login method
+  async login(payload: LoginPayload): Promise<ApiResponse<LoginResponseData>> {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.message || "Login failed");
+    }
+
+    return data;
+  },
+
+  //logout
   logout() {
-    Cookies.remove('accessToken');
-    Cookies.remove('user');
+    //token clear
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("token");
+    }
   },
 };
