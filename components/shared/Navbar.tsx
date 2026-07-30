@@ -2,13 +2,15 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
-import { LogOut, LayoutDashboard } from "lucide-react";
+import { LogOut, LayoutDashboard, Wrench } from "lucide-react";
 
 export default function Navbar() {
   const router = useRouter();
+  const pathname = usePathname();
+
   const [auth, setAuth] = useState<{
     token: string | null;
     role: string | null;
@@ -22,17 +24,14 @@ export default function Navbar() {
     const token = Cookies.get("token") || null;
     const role = Cookies.get("role") || null;
 
-    // React Safe Approach: microtask ব্যবহার করা যেন cascading renders না ঘটে
     queueMicrotask(() => {
       setAuth({ token, role });
     });
   }, []);
 
+  // Hook গুলো আগে সম্পূর্ণ রান হবে
   useEffect(() => {
-    // ১. প্রথমবার লোডের সময় সেফ উপায়ে চেক করবে
     updateAuthState();
-
-    // ২. Login বা Logout হলে ইভেন্ট শুনে সাথে সাথে স্টেট আপডেট করবে
     window.addEventListener("auth-change", updateAuthState);
 
     return () => {
@@ -40,19 +39,30 @@ export default function Navbar() {
     };
   }, [updateAuthState]);
 
+  // Dashboard, Login, এবং Register পেজে থাকলে Navbar রেন্ডার হবে না
+  if (
+    pathname.includes("dashboard") ||
+    pathname.startsWith("/admin-dashboard") ||
+    pathname.startsWith("/technician-dashboard") ||
+    pathname.startsWith("/customer-dashboard") ||
+    pathname === "/login" ||
+    pathname === "/register"
+  ) {
+    return null;
+  }
+
   // Logout Function
   const handleLogout = () => {
     Cookies.remove("token");
     Cookies.remove("role");
 
-    // ইভেন্ট ডিসপ্যাচ করা যেন Navbar সাথে সাথে আপডেট হয়
     window.dispatchEvent(new Event("auth-change"));
 
     toast.success("Logged out successfully!");
     router.push("/login");
   };
 
-  // Role অনুযায়ী সঠিক ড্যাশবোর্ড ইউআরএল নির্ধারণ
+  // Role অনুযায়ী সঠিক ড্যাশবোর্ড ইউআরএল নির্ধারণ
   const getDashboardLink = () => {
     if (auth.role === "ADMIN") return "/admin-dashboard";
     if (auth.role === "TECHNICIAN") return "/technician-dashboard";
@@ -62,18 +72,21 @@ export default function Navbar() {
   return (
     <header className="w-full bg-white dark:bg-[#0f172a] border-b border-slate-200 dark:border-slate-800 px-6 py-4 transition-colors">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
-        {/* Brand Logo / Name */}
+        {/* 🔵 Brand Logo with Wrench Icon */}
         <Link
           href="/"
-          className="text-xl font-bold text-blue-600 dark:text-blue-500"
+          className="flex items-center gap-2 font-bold text-xl text-blue-600 dark:text-blue-500"
         >
-          FixItNow
+          <div className="p-1.5 bg-blue-600 text-white rounded-lg">
+            <Wrench className="w-5 h-5" />
+          </div>
+          <span>FixItNow</span>
         </Link>
 
         {/* Dynamic Auth Section */}
         <nav className="flex items-center gap-4 text-sm font-medium">
           {auth.token ? (
-            /* 🟢 Logged In State */
+            /* Logged In State */
             <>
               <Link
                 href={getDashboardLink()}
@@ -92,7 +105,7 @@ export default function Navbar() {
               </button>
             </>
           ) : (
-            /* 🔴 Logged Out State */
+            /* Logged Out State */
             <>
               <Link
                 href="/login"

@@ -6,8 +6,10 @@ export interface Category {
 }
 
 export interface TechnicianUser {
+  id?: string;
   name: string;
   email: string;
+  image?: string;
 }
 
 export interface TechnicianProfile {
@@ -24,9 +26,15 @@ export interface Service {
   price: number;
   location: string;
   categoryId: string;
-  category: Category;
+  category?: Category;
   technicianProfileId: string;
   technicianProfile?: TechnicianProfile;
+
+  // Visual/UI/Computed Properties (Optional for Frontend compatibility)
+  image?: string;
+  rating?: number;
+  reviewsCount?: number;
+  providerName?: string; // Optional shortcut property
 }
 
 export interface Meta {
