@@ -1,23 +1,61 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image"; // <--- ১. Next.js Image Component ইমপোর্ট করো
 import { usePathname } from "next/navigation";
 import Cookies from "js-cookie";
 import { LogOut, Settings } from "lucide-react";
 import { roleBaseNavItems } from "@/config/sidebar.config";
+import { IUserProfile } from "@/types/user.interface";
+import { getMyProfile } from "@/services/profile.service";
 
 interface SidebarProps {
   role: "ADMIN" | "TECHNICIAN" | "CUSTOMER";
-  userProfile?: {
-    name: string;
-    roleTitle: string;
-    avatar?: string;
-  };
+  userProfile?: IUserProfile | null;
 }
 
 export default function DashboardSidebar({ role, userProfile }: SidebarProps) {
   const pathname = usePathname();
   const navItems = roleBaseNavItems[role] || [];
+
+  // Local state
+  const [currentUser, setCurrentUser] = useState<IUserProfile | null>(
+    userProfile || null
+  );
+
+  // Track key prop to derive state during render cycle
+  const [prevUserProfile, setPrevUserProfile] = useState<IUserProfile | null | undefined>(userProfile);
+
+  if (userProfile !== prevUserProfile) {
+    setPrevUserProfile(userProfile);
+    setCurrentUser(userProfile || null);
+  }
+
+  // Event Listener & Re-fetch Logic
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const data = await getMyProfile();
+        if (data) {
+          setCurrentUser(data);
+        }
+      } catch (error) {
+        console.error("Failed to refresh sidebar profile:", error);
+      }
+    };
+
+    if (!userProfile) {
+      fetchUserData();
+    }
+
+    const handleProfileUpdate = () => {
+      fetchUserData();
+    };
+
+    window.addEventListener("profileUpdated", handleProfileUpdate);
+    return () => window.removeEventListener("profileUpdated", handleProfileUpdate);
+  }, [userProfile]);
 
   const handleLogout = () => {
     Cookies.remove("token");
@@ -65,34 +103,32 @@ export default function DashboardSidebar({ role, userProfile }: SidebarProps) {
 
       {/* Footer Section */}
       <div className="space-y-4 pt-4 border-t border-slate-200 dark:border-slate-800">
-        {/* Status / Profile Widget (Technician status/Customer card) */}
-        {role === "TECHNICIAN" ? (
-          <div className="p-3 bg-blue-50 dark:bg-slate-800/50 rounded-xl border border-blue-100 dark:border-slate-700">
-            <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">
-              Technician Status
-            </p>
-            <div className="flex items-center gap-2 mt-1">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400">
-                Available for Hire
-              </span>
-            </div>
-          </div>
-        ) : (
-          <div className="flex items-center gap-3 p-2 rounded-xl bg-slate-100/80 dark:bg-slate-800/50">
+        {/* User Card Widget */}
+        <div className="flex items-center gap-3 p-2 rounded-xl bg-slate-100/80 dark:bg-slate-800/50">
+          {currentUser?.profileImg ? (
+            /* ২. next/image ব্যবহার করা হয়েছে */
+            <Image
+              src={currentUser.profileImg}
+              alt={currentUser?.name || "User Profile"}
+              width={36}
+              height={36}
+              unoptimized // external/arbitrary URL থাকলে Next.js optimization-এর domain error এড়াতে
+              className="w-9 h-9 rounded-full object-cover border border-slate-300 dark:border-slate-700"
+            />
+          ) : (
             <div className="w-9 h-9 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-sm">
-              {userProfile?.name ? userProfile.name.charAt(0) : "U"}
+              {currentUser?.name ? currentUser.name.charAt(0).toUpperCase() : "U"}
             </div>
-            <div className="overflow-hidden">
-              <p className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">
-                {userProfile?.name || "User Profile"}
-              </p>
-              <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium truncate">
-                {userProfile?.roleTitle || role}
-              </p>
-            </div>
+          )}
+          <div className="overflow-hidden">
+            <p className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">
+              {currentUser?.name || "User Profile"}
+            </p>
+            <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium truncate capitalize">
+              {currentUser?.role?.toLowerCase() || role.toLowerCase()}
+            </p>
           </div>
-        )}
+        </div>
 
         {/* Quick Actions */}
         <div className="space-y-1">

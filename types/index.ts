@@ -42,9 +42,8 @@ export interface ITechnicianProfile {
 export interface ICategory {
   id: string;
   name: string;
-  description?: string | null;
+  description?: string;
   slug: string;
-  services?: IService[];
 }
 
 export interface IService {
@@ -55,9 +54,13 @@ export interface IService {
   location: string;
   categoryId: string;
   category?: ICategory;
-  technicianProfileId: string;
-  technicianProfile?: ITechnicianProfile;
-  bookings?: IBooking[];
+  technicianProfile?: {
+    id: string;
+    user?: {
+      name: string;
+      email: string;
+    };
+  };
 }
 
 export interface IPayment {

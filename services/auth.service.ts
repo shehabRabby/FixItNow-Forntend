@@ -1,3 +1,4 @@
+
 import Cookies from "js-cookie";
 
 export interface RegisterPayload {
@@ -84,3 +85,4 @@ export const authService = {
     }
   },
 };
+
