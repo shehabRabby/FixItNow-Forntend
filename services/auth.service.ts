@@ -1,9 +1,10 @@
+import Cookies from "js-cookie";
+
 export interface RegisterPayload {
   name: string;
   email: string;
-  phone: string;
-  role: "CUSTOMER" | "TECHNICIAN";
   password: string;
+  role: "CUSTOMER" | "TECHNICIAN";
 }
 
 export interface LoginPayload {
@@ -18,7 +19,9 @@ export interface ApiResponse<T = unknown> {
 }
 
 export interface LoginResponseData {
-  token: string;
+  accessToken?: string;
+  token?: string;
+  refreshToken?: string;
   user: {
     id: string;
     name: string;
@@ -27,31 +30,13 @@ export interface LoginResponseData {
   };
 }
 
+const API_URL =
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
+
 export const authService = {
+  // 🟢 Updated URL: Points to /users/register
   async register(payload: RegisterPayload): Promise<ApiResponse> {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/auth/register`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      },
-    );
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      throw new Error(data.message || "Registration failed");
-    }
-
-    return data;
-  },
-
-  //login method
-  async login(payload: LoginPayload): Promise<ApiResponse<LoginResponseData>> {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
+    const res = await fetch(`${API_URL}/users/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -62,17 +47,40 @@ export const authService = {
     const data = await res.json();
 
     if (!res.ok) {
-      throw new Error(data.message || "Login failed");
+      throw new Error(data.message || "Registration failed");
     }
 
     return data;
   },
 
-  //logout
+  // 🟢 Login Endpoint
+  async login(payload: LoginPayload): Promise<ApiResponse<LoginResponseData>> {
+    const res = await fetch(`${API_URL}/auth/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.message || "Login failed");
+    }
+
+    // Save tokens in cookies
+    if (data.data?.accessToken) {
+      Cookies.set("token", data.data.accessToken, { expires: 7 });
+      Cookies.set("role", data.data.user.role, { expires: 7 });
+    }
+
+    return data;
+  },
+
   logout() {
-    //token clear
+    Cookies.remove("token");
+    Cookies.remove("role");
     if (typeof window !== "undefined") {
-      localStorage.removeItem("token");
+      window.location.href = "/login";
     }
   },
 };

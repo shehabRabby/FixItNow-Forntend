@@ -1,13 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Mail, Lock, Eye, EyeOff, Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
+import Cookies from "js-cookie";
 import { authService } from "@/services/auth.service";
 
 const loginSchema = z.object({
@@ -34,20 +34,42 @@ export default function LoginForm() {
     setIsLoading(true);
     try {
       const res = await authService.login(data);
-      if (res.success) {
+
+      if (res?.success) {
         toast.success(res.message || "Login successful!");
 
-        const user = res.data.user;
-        if (user.role === "ADMIN") router.push("/admin/dashboard");
-        else if (user.role === "TECHNICIAN")
-          router.push("/technician/dashboard");
-        else router.push("/dashboard");
+        const token = res.data?.accessToken;
+        const user = res.data?.user;
+
+        if (token) {
+          Cookies.set("token", token, { expires: 7 });
+          if (user?.role) Cookies.set("role", user.role, { expires: 7 });
+
+          // 🟢 ইভেন্ট ফায়ার করা হচ্ছে যেন Navbar সাথে সাথে আপডেট হয়
+          window.dispatchEvent(new Event("auth-change"));
+        }
+
+        // Role based redirection
+        const userRole = user?.role;
+
+        setTimeout(() => {
+          if (userRole === "ADMIN") {
+            router.push("/admin-dashboard");
+          } else if (userRole === "TECHNICIAN") {
+            router.push("/technician-dashboard");
+          } else {
+            router.push("/customer-dashboard");
+          }
+        }, 500);
+      } else {
+        toast.error(res?.message || "Invalid credentials!");
       }
     } catch (error: unknown) {
+      console.error("Login Error:", error);
       const errorMessage =
         error instanceof Error
           ? error.message
-          : "Failed to login. Please check credentials.";
+          : "Failed to login. Please check your credentials.";
       toast.error(errorMessage);
     } finally {
       setIsLoading(false);
@@ -56,7 +78,7 @@ export default function LoginForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      {/* Email Field */}
+      {/* Email */}
       <div className="space-y-1.5">
         <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
           Email Address
@@ -66,8 +88,8 @@ export default function LoginForm() {
           <input
             {...register("email")}
             type="email"
-            placeholder="name@company.com"
-            className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 dark:focus:ring-blue-500 transition-all placeholder:text-slate-400"
+            placeholder="name@example.com"
+            className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all placeholder:text-slate-400"
           />
         </div>
         {errors.email && (
@@ -77,25 +99,23 @@ export default function LoginForm() {
         )}
       </div>
 
-      {/* Password Field */}
+      {/* Password */}
       <div className="space-y-1.5">
-        <div className="flex items-center justify-between">
-          <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-            Password
-          </label>
-        </div>
+        <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+          Password
+        </label>
         <div className="relative">
           <Lock className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
           <input
             {...register("password")}
             type={showPassword ? "text" : "password"}
             placeholder="••••••••"
-            className="w-full pl-10 pr-10 py-2.5 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 dark:focus:ring-blue-500 transition-all placeholder:text-slate-400"
+            className="w-full pl-10 pr-10 py-2.5 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all placeholder:text-slate-400"
           />
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
+            className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
           >
             {showPassword ? (
               <EyeOff className="w-4 h-4" />
@@ -111,11 +131,10 @@ export default function LoginForm() {
         )}
       </div>
 
-      {/* Submit Button */}
       <button
         type="submit"
         disabled={isLoading}
-        className="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold rounded-xl text-sm shadow-md shadow-blue-500/20 transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed mt-2"
+        className="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl text-sm shadow-md transition-all flex items-center justify-center gap-2 disabled:opacity-70 mt-2"
       >
         {isLoading ? (
           <>

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { User, Mail, Phone, Lock, Eye, EyeOff, Loader2 } from "lucide-react";
+import { User, Mail, Lock, Eye, EyeOff, Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
 import { authService } from "@/services/auth.service";
 import RoleSelector from "./RoleSelector";
@@ -14,7 +14,6 @@ const registerSchema = z
   .object({
     name: z.string().min(2, "Name must be at least 2 characters"),
     email: z.string().email("Please enter a valid email address"),
-    phone: z.string().min(11, "Phone number must be at least 11 digits"),
     role: z.enum(["CUSTOMER", "TECHNICIAN"]),
     password: z.string().min(6, "Password must be at least 6 characters"),
     confirmPassword: z.string(),
@@ -29,20 +28,20 @@ type RegisterFormValues = z.infer<typeof registerSchema>;
 export default function RegisterForm() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const {
     register,
     handleSubmit,
     setValue,
-    control, 
+    control,
     formState: { errors },
   } = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
     defaultValues: { role: "CUSTOMER" },
   });
 
- 
   const selectedRole = useWatch({
     control,
     name: "role",
@@ -52,16 +51,26 @@ export default function RegisterForm() {
   const onSubmit = async (data: RegisterFormValues) => {
     setIsLoading(true);
     try {
-      const payload = { ...data };
-      delete (payload as { confirmPassword?: string }).confirmPassword;
+      const payload = {
+        name: data.name,
+        email: data.email,
+        role: data.role,
+        password: data.password,
+      };
 
       const res = await authService.register(payload);
 
-      if (res.success) {
-        toast.success(res.message || "Registration successful! Please login.");
-        router.push("/login");
+      if (res?.success) {
+        toast.success("Account created successfully! Please log in.");
+
+        setTimeout(() => {
+          router.push("/login");
+        }, 500);
+      } else {
+        toast.error(res?.message || "Registration failed!");
       }
     } catch (error: unknown) {
+      console.error("Register Error:", error);
       const errorMessage =
         error instanceof Error
           ? error.message
@@ -74,13 +83,12 @@ export default function RegisterForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
-      {/* Role Selection Component */}
       <RoleSelector
         selectedRole={selectedRole}
         onSelect={(role) => setValue("role", role)}
       />
 
-      {/* Full Name */}
+      {/* Name Field */}
       <div className="space-y-1">
         <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
           Full Name
@@ -90,7 +98,7 @@ export default function RegisterForm() {
           <input
             {...register("name")}
             type="text"
-            placeholder="Enter name"
+            placeholder="John Doe"
             className="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all placeholder:text-slate-400"
           />
         </div>
@@ -101,7 +109,7 @@ export default function RegisterForm() {
         )}
       </div>
 
-      {/* Email Address */}
+      {/* Email Field */}
       <div className="space-y-1">
         <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
           Email Address
@@ -111,34 +119,13 @@ export default function RegisterForm() {
           <input
             {...register("email")}
             type="email"
-            placeholder="name@gmail.com"
+            placeholder="name@example.com"
             className="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all placeholder:text-slate-400"
           />
         </div>
         {errors.email && (
           <p className="text-xs text-rose-500 font-medium">
             {errors.email.message}
-          </p>
-        )}
-      </div>
-
-      {/* Phone Number */}
-      <div className="space-y-1">
-        <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-          Phone Number
-        </label>
-        <div className="relative">
-          <Phone className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
-          <input
-            {...register("phone")}
-            type="tel"
-            placeholder="01XXXXXXXXX"
-            className="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all placeholder:text-slate-400"
-          />
-        </div>
-        {errors.phone && (
-          <p className="text-xs text-rose-500 font-medium">
-            {errors.phone.message}
           </p>
         )}
       </div>
@@ -159,7 +146,7 @@ export default function RegisterForm() {
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
+            className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
           >
             {showPassword ? (
               <EyeOff className="w-4 h-4" />
@@ -184,10 +171,21 @@ export default function RegisterForm() {
           <Lock className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
           <input
             {...register("confirmPassword")}
-            type={showPassword ? "text" : "password"}
+            type={showConfirmPassword ? "text" : "password"}
             placeholder="••••••••"
             className="w-full pl-10 pr-10 py-2 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all placeholder:text-slate-400"
           />
+          <button
+            type="button"
+            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+          >
+            {showConfirmPassword ? (
+              <EyeOff className="w-4 h-4" />
+            ) : (
+              <Eye className="w-4 h-4" />
+            )}
+          </button>
         </div>
         {errors.confirmPassword && (
           <p className="text-xs text-rose-500 font-medium">
@@ -196,16 +194,15 @@ export default function RegisterForm() {
         )}
       </div>
 
-      {/* Submit Button */}
       <button
         type="submit"
         disabled={isLoading}
-        className="w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold rounded-xl text-sm shadow-md shadow-blue-500/20 transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed mt-3"
+        className="w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl text-sm transition-all flex items-center justify-center gap-2 disabled:opacity-70 mt-3"
       >
         {isLoading ? (
           <>
             <Loader2 className="w-4 h-4 animate-spin" />
-            <span>Creating Account...</span>
+            <span>Registering...</span>
           </>
         ) : (
           <span>Create Account</span>

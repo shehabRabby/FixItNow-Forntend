@@ -19,7 +19,7 @@ export default function LoginPage() {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="w-full max-w-110"
+          className="w-full max-w-md"
         >
           {/* Card Container */}
           <div className="bg-white dark:bg-[#0f172a] rounded-2xl shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-200/80 dark:border-slate-800/80 overflow-hidden">
@@ -33,7 +33,7 @@ export default function LoginPage() {
               </button>
               <Link
                 href="/register"
-                className="py-2.5 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white text-center transition-all"
+                className="py-2.5 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white text-center transition-all flex items-center justify-center"
               >
                 Sign Up
               </Link>
