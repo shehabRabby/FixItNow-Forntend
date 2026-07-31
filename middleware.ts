@@ -26,21 +26,22 @@ export function middleware(request: NextRequest) {
     pathname.startsWith(route),
   );
 
-  // ১. লগইন ছাড়া প্রটেক্টেড ড্যাশবোর্ডে প্রবেশের চেষ্টা করলে -> /login এ পাঠাবে
+  // without login try to go dashboard then direct through to login page
   if (!token && isProtectedRoute) {
     const loginUrl = new URL("/login", request.url);
     loginUrl.searchParams.set("redirect", pathname);
     return NextResponse.redirect(loginUrl);
   }
 
-  // ২. লগইন অবস্থায় /login বা /register পেজে ঢোকার চেষ্টা করলে -> নিজ ড্যাশবোর্ডে পাঠাবে
+
+  // if login and try to go login/register page then direct go to own dashboard
   if (token && isAuthRoute) {
     const redirectUrl =
       role && roleBasedRoutes[role] ? roleBasedRoutes[role] : "/";
     return NextResponse.redirect(new URL(redirectUrl, request.url));
   }
 
-  // ৩. রোল ভিত্তিক ড্যাশবোর্ড গার্ড (Wrong Role Protection)
+  // Wrong Role Protection
   if (token && role && isProtectedRoute) {
     const expectedDashboard = roleBasedRoutes[role];
 
