@@ -86,7 +86,7 @@ export default function ServiceFilters({
 
             {searchTerm && (
               <span className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 rounded-lg border border-blue-100 dark:border-blue-900">
-                Query: "{searchTerm}"
+                Query: `{searchTerm}`
                 <button onClick={() => onFilterChange("search", "")}>
                   <X className="w-3 h-3 hover:opacity-80" />
                 </button>

@@ -19,7 +19,6 @@ export default function Navbar() {
     role: null,
   });
 
-  // কুকি থেকে স্টেট আপডেট করার নিরাপদ ফাংশন
   const updateAuthState = useCallback(() => {
     const token = Cookies.get("token") || null;
     const role = Cookies.get("role") || null;
@@ -29,7 +28,7 @@ export default function Navbar() {
     });
   }, []);
 
-  // Hook গুলো আগে সম্পূর্ণ রান হবে
+
   useEffect(() => {
     updateAuthState();
     window.addEventListener("auth-change", updateAuthState);
@@ -39,7 +38,7 @@ export default function Navbar() {
     };
   }, [updateAuthState]);
 
-  // Dashboard, Login, এবং Register পেজে থাকলে Navbar রেন্ডার হবে না
+  //navbar can not be render this pages
   if (
     pathname.includes("dashboard") ||
     pathname.startsWith("/admin-dashboard") ||
@@ -62,7 +61,7 @@ export default function Navbar() {
     router.push("/login");
   };
 
-  // Role অনুযায়ী সঠিক ড্যাশবোর্ড ইউআরএল নির্ধারণ
+  // Role based dashboard
   const getDashboardLink = () => {
     if (auth.role === "ADMIN") return "/admin-dashboard";
     if (auth.role === "TECHNICIAN") return "/technician-dashboard";
@@ -72,7 +71,7 @@ export default function Navbar() {
   return (
     <header className="w-full bg-white dark:bg-[#0f172a] border-b border-slate-200 dark:border-slate-800 px-6 py-4 transition-colors">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
-        {/* 🔵 Brand Logo with Wrench Icon */}
+      
         <Link
           href="/"
           className="flex items-center gap-2 font-bold text-xl text-blue-600 dark:text-blue-500"

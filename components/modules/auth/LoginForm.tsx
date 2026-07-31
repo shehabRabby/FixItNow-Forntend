@@ -45,7 +45,7 @@ export default function LoginForm() {
           Cookies.set("token", token, { expires: 7 });
           if (user?.role) Cookies.set("role", user.role, { expires: 7 });
 
-          // 🟢 ইভেন্ট ফায়ার করা হচ্ছে যেন Navbar সাথে সাথে আপডেট হয়
+          //instant update profile
           window.dispatchEvent(new Event("auth-change"));
         }
 

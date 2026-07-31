@@ -38,7 +38,7 @@ export default function AdminDashboardPage() {
         </p>
       </div>
 
-      {/* Real Dynamic Overview Metrics */}
+      {/*Dynamic Overview Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
           <p className="text-xs font-semibold text-slate-500">Total Revenue</p>

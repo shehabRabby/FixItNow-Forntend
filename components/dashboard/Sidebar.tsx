@@ -103,16 +103,14 @@ export default function DashboardSidebar({ role, userProfile }: SidebarProps) {
 
       {/* Footer Section */}
       <div className="space-y-4 pt-4 border-t border-slate-200 dark:border-slate-800">
-        {/* User Card Widget */}
         <div className="flex items-center gap-3 p-2 rounded-xl bg-slate-100/80 dark:bg-slate-800/50">
           {currentUser?.profileImg ? (
-            /* ২. next/image ব্যবহার করা হয়েছে */
             <Image
               src={currentUser.profileImg}
               alt={currentUser?.name || "User Profile"}
               width={36}
               height={36}
-              unoptimized // external/arbitrary URL থাকলে Next.js optimization-এর domain error এড়াতে
+              unoptimized 
               className="w-9 h-9 rounded-full object-cover border border-slate-300 dark:border-slate-700"
             />
           ) : (

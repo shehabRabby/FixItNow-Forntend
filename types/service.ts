@@ -34,7 +34,7 @@ export interface Service {
   image?: string;
   rating?: number;
   reviewsCount?: number;
-  providerName?: string; // Optional shortcut property
+  providerName?: string; // Optional 
 }
 
 export interface Meta {

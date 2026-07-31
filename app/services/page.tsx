@@ -180,10 +180,8 @@ function ServicesContent() {
     const limit = meta.limit || 8;
     const total = meta.total || 0;
 
-    // প্রথমবার লোড হওয়া অবস্থায় বা মোট ডাটা জানা না থাকলে ডিফল্ট লিমিট (8)
+    // default limit
     if (!total) return limit;
-
-    // বর্তমান পেজের জন্য কতগুলো আইটেম অবশিষ্টাংশ আছে তার হিসাব
     const remainingItems = total - (page - 1) * limit;
     return remainingItems > 0 ? Math.min(remainingItems, limit) : limit;
   };

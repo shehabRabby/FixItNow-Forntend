@@ -44,7 +44,7 @@ export default function ProfileSettings() {
     setUpdating(true);
     setMessage(null);
 
-    // ব্যাকএন্ডে ইমেজ ছাড়া শুধু প্রয়োজনীয় ডাটা পাঠানো হচ্ছে
+    // skip profile image
     const payload = {
       name: formData.name,
       phoneNumber: formData.phoneNumber,
@@ -55,7 +55,6 @@ export default function ProfileSettings() {
       await updateMyProfile(payload);
       setMessage({ type: "success", text: "Profile updated successfully!" });
 
-      // সাইডবার আপডেট করার জন্য ইভেন্ট ট্রিগার
       window.dispatchEvent(new Event("profileUpdated"));
       router.refresh();
     } catch (err: unknown) {
@@ -117,7 +116,7 @@ export default function ProfileSettings() {
             </div>
           </div>
 
-          {/* Email (Read Only) */}
+          {/* Email */}
           <div className="space-y-1.5">
             <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
               Email Address (Cannot be changed)
@@ -152,7 +151,7 @@ export default function ProfileSettings() {
             </div>
           </div>
 
-          {/* Profile Image (Disabled) */}
+          {/* Profile Image-Disabled */}
           <div className="space-y-1.5">
             <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
               Profile Image URL (Disabled)

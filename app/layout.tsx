@@ -20,13 +20,8 @@ export default function RootLayout({
   return (
     <html lang="en" className={cn("font-sans", geist.variable)}>
       <body className="antialiased">
-        {/* 👈 ২. এখানে Navbar বসিয়ে দাও */}
         <Navbar />
-        
-        {/* পেজের মেইন কনটেন্ট */}
         {children}
-
-        {/* টোস্ট নোটিফিকেশন */}
         <Toaster position="top-right" />
       </body>
     </html>
