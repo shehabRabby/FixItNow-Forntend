@@ -6,6 +6,7 @@ import { useRouter, usePathname } from "next/navigation";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
 import { LogOut, LayoutDashboard, Wrench } from "lucide-react";
+import NavLinks from "./NavLinks"; 
 
 export default function Navbar() {
   const router = useRouter();
@@ -28,7 +29,6 @@ export default function Navbar() {
     });
   }, []);
 
-
   useEffect(() => {
     updateAuthState();
     window.addEventListener("auth-change", updateAuthState);
@@ -38,7 +38,6 @@ export default function Navbar() {
     };
   }, [updateAuthState]);
 
-  //navbar can not be render this pages
   if (
     pathname.includes("dashboard") ||
     pathname.startsWith("/admin-dashboard") ||
@@ -50,7 +49,6 @@ export default function Navbar() {
     return null;
   }
 
-  // Logout Function
   const handleLogout = () => {
     Cookies.remove("token");
     Cookies.remove("role");
@@ -61,7 +59,6 @@ export default function Navbar() {
     router.push("/login");
   };
 
-  // Role based dashboard
   const getDashboardLink = () => {
     if (auth.role === "ADMIN") return "/admin-dashboard";
     if (auth.role === "TECHNICIAN") return "/technician-dashboard";
@@ -69,9 +66,10 @@ export default function Navbar() {
   };
 
   return (
-    <header className="w-full bg-white dark:bg-[#0f172a] border-b border-slate-200 dark:border-slate-800 px-6 py-4 transition-colors">
+    <header className="w-full bg-white dark:bg-[#0f172a] border-b border-slate-200 dark:border-slate-800 px-6 py-4 transition-colors sticky top-0 z-50">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
-      
+        
+        {/* Brand Logo */}
         <Link
           href="/"
           className="flex items-center gap-2 font-bold text-xl text-blue-600 dark:text-blue-500"
@@ -82,10 +80,12 @@ export default function Navbar() {
           <span>FixItNow</span>
         </Link>
 
+        {/* navigation links */}
+        <NavLinks />
+
         {/* Dynamic Auth Section */}
         <nav className="flex items-center gap-4 text-sm font-medium">
           {auth.token ? (
-            /* Logged In State */
             <>
               <Link
                 href={getDashboardLink()}
@@ -104,7 +104,6 @@ export default function Navbar() {
               </button>
             </>
           ) : (
-            /* Logged Out State */
             <>
               <Link
                 href="/login"

@@ -15,7 +15,7 @@ const roleBasedRoutes: Record<string, string> = {
   ADMIN: "/admin-dashboard",
 };
 
-export function middleware(request: NextRequest) {
+export default function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   const token = request.cookies.get("token")?.value;
@@ -32,7 +32,6 @@ export function middleware(request: NextRequest) {
     loginUrl.searchParams.set("redirect", pathname);
     return NextResponse.redirect(loginUrl);
   }
-
 
   // if login and try to go login/register page then direct go to own dashboard
   if (token && isAuthRoute) {
