@@ -26,24 +26,20 @@ const getAuthHeaders = (): Record<string, string> => {
   };
 
   if (rawToken) {
-    // 💡 ১. Quotes এবং Extra Spaces রিমুভ করা
     let cleanedToken = rawToken.trim().replace(/^"+|"+$/g, "");
 
-    // 💡 ২. যদি টোকেনের শুরুতে "Bearer " থাকে, তবে সেটা কেটে ফেলে শুধু মূল Token টুকু নেওয়া
     if (cleanedToken.startsWith("Bearer ")) {
       cleanedToken = cleanedToken.replace("Bearer ", "").trim();
     }
-
-    // ⚠️ আপনার ব্যাকএন্ড যদি সরাসরি টোকেন আশা করে (Bearer ছাড়া):
     headers["Authorization"] = cleanedToken;
-    headers["token"] = cleanedToken; // ব্যাকএন্ড যদি `req.headers.token` চেক করে তার জন্য
+    headers["token"] = cleanedToken;
   }
 
   return headers;
 };
 
 export const categoryService = {
-  // 🟢 ১. গেট অল ক্যাটাগরি
+
   async getAllCategories() {
     try {
       const res = await fetch(`${API_URL}/categories`, {
@@ -64,7 +60,6 @@ export const categoryService = {
     }
   },
 
-  // 🟢 ২. ক্রিয়েট ক্যাটাগরি
   async createCategory(payload: ICategoryPayload) {
     const res = await fetch(`${API_URL}/categories/create-category`, {
       method: "POST",
@@ -83,7 +78,6 @@ export const categoryService = {
     return data;
   },
 
-  // 🟢 ৩. আপডেট ক্যাটাগরি
   async updateCategory(id: string, payload: Partial<ICategoryPayload>) {
     const res = await fetch(`${API_URL}/categories/${id}`, {
       method: "PATCH",
@@ -102,7 +96,6 @@ export const categoryService = {
     return data;
   },
 
-  // 🟢 ৪. ডিলিট ক্যাটাগরি
   async deleteCategory(id: string) {
     const res = await fetch(`${API_URL}/categories/${id}`, {
       method: "DELETE",

@@ -8,7 +8,7 @@ export interface ICategory {
   name: string;
   slug: string;
   description?: string;
-  _id?: string; // Prisma/MongoDB fallback handling
+  _id?: string; 
 }
 
 interface CategoryCardProps {
@@ -18,7 +18,7 @@ interface CategoryCardProps {
   onDelete: (id: string) => void;
 }
 
-// Unsplash Dynamic Gradient/Image Based on Name Hash for Uniqueness
+
 const getCategoryImageUrl = (name: string = "") => {
   const imagePool = [
     "https://images.unsplash.com/photo-1581578731548-c64695cc6952?q=80&w=600&auto=format&fit=crop",
@@ -28,7 +28,6 @@ const getCategoryImageUrl = (name: string = "") => {
     "https://images.unsplash.com/photo-1581092335397-9583fe92d232?q=80&w=600&auto=format&fit=crop",
   ];
 
-  // Safe fallback if name is undefined or empty
   if (!name) return imagePool[0];
 
   let charCodeSum = 0;
@@ -45,7 +44,6 @@ export function CategoryCard({
   onDelete,
 }: CategoryCardProps) {
   const imageUrl = getCategoryImageUrl(category?.name);
-  // Ensure we get valid ID whether backend returns 'id' or '_id'
   const categoryId = category?.id || category?._id || "";
 
   return (
