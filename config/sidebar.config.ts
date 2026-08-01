@@ -8,7 +8,6 @@ import {
   DollarSign,
   Star,
   HelpCircle,
-  Settings,
 } from "lucide-react";
 
 export const roleBaseNavItems = {
