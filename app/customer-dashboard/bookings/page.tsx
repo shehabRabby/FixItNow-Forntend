@@ -8,17 +8,29 @@ import { BookingHeader } from "./components/BookingHeader";
 import { BookingFilter } from "./components/BookingFilter";
 import { BookingCard } from "./components/BookingCard";
 
+// 🔥 ইন্টারফেসটি ব্যাকএন্ড এবং BookingCard-এর রিকোয়ারমেন্ট অনুযায়ী আপডেট করা হয়েছে
 interface IService {
-  name: string;
-  price: number;
+  id: string;
+  title?: string;
+  name?: string;
+  description?: string;
+  price?: number;
+  location?: string;
 }
 
 interface IBooking {
   id: string;
   status: string;
-  timeSlot: string;
+  bookingDate?: string;
+  date?: string;
+  timeSlot?: string;
+  slot?: string;
+  address?: string;
+  location?: string;
   createdAt: string;
-  service: IService;
+  service?: IService;
+  serviceName?: string;
+  price?: number;
 }
 
 export default function CustomerBookingsPage() {
@@ -44,7 +56,6 @@ export default function CustomerBookingsPage() {
     }
   }, []);
 
-  // রিয়েক্টের স্ট্যান্ডার্ড নিয়মে লাইফসাইকেল হ্যান্ডেল করতে আইফি (IIFE) অথবা ইফেক্ট বাইপাস পদ্ধতি
   useEffect(() => {
     let isMounted = true;
 

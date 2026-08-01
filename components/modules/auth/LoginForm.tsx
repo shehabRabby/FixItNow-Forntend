@@ -44,8 +44,7 @@ export default function LoginForm() {
         if (token) {
           Cookies.set("token", token, { expires: 7 });
           if (user?.role) Cookies.set("role", user.role, { expires: 7 });
-
-          //instant update profile
+          localStorage.setItem("token", token);
           window.dispatchEvent(new Event("auth-change"));
         }
 

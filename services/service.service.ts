@@ -36,3 +36,16 @@ export const getAllServices = async (params?: IServiceFilterParams) => {
     return { success: false, data: [], meta: null };
   }
 };
+
+export const getServiceById = async (id: string) => {
+  try {
+    const res = await fetch(`${NEXT_PUBLIC_API_URL}/services/${id}`, {
+      cache: "no-store",
+    });
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching single service:", error);
+    return { success: false, data: null };
+  }
+};
