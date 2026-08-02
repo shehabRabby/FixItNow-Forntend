@@ -1,4 +1,20 @@
-import { Loader2, Clock, CheckCircle2, XCircle, Ban, Calendar, MapPin, User, Mail } from "lucide-react";
+"use client";
+
+import { useState } from "react";
+import {
+  Loader2,
+  Clock,
+  CheckCircle2,
+  XCircle,
+  Ban,
+  Calendar,
+  MapPin,
+  CreditCard,
+  Star,
+} from "lucide-react";
+import CheckoutModal from "./CheckoutModal";
+import ReviewModal from "../../reviews/components/ReviewModal";
+
 
 interface BookingCardProps {
   booking: {
@@ -15,7 +31,7 @@ interface BookingCardProps {
       name?: string;
       description?: string;
       price?: number;
-      location?: string; // এটি হলো সার্ভিসের ডিফল্ট লোকেশন
+      location?: string;
     };
     price?: number;
   };
@@ -23,39 +39,75 @@ interface BookingCardProps {
   isCancelling?: boolean;
 }
 
-export function BookingCard({ booking, onCancel, isCancelling }: BookingCardProps) {
+export function BookingCard({
+  booking,
+  onCancel,
+  isCancelling,
+}: BookingCardProps) {
+  const [isPaymentOpen, setIsPaymentOpen] = useState(false);
+  const [isReviewOpen, setIsReviewOpen] = useState(false); // রিভিউ মোডালের জন্য স্টেট
+
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "REQUESTED":
-        return <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-amber-50 text-amber-600 dark:bg-amber-900/30"><Clock className="w-3 h-3" /> Requested</span>;
+        return (
+          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-amber-50 text-amber-600 dark:bg-amber-900/30">
+            <Clock className="w-3 h-3" /> Requested
+          </span>
+        );
       case "ACCEPTED":
-        return <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-600 dark:bg-blue-900/30"><CheckCircle2 className="w-3 h-3" /> Accepted</span>;
+        return (
+          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-600 dark:bg-blue-900/30">
+            <CheckCircle2 className="w-3 h-3" /> Accepted
+          </span>
+        );
       case "PAID":
-        return <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-600 dark:bg-emerald-900/30"><CheckCircle2 className="w-3 h-3" /> Paid</span>;
+        return (
+          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-600 dark:bg-emerald-900/30">
+            <CheckCircle2 className="w-3 h-3" /> Paid
+          </span>
+        );
       case "IN_PROGRESS":
-        return <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-indigo-50 text-indigo-600 dark:bg-indigo-900/30"><Loader2 className="w-3 h-3 animate-spin" /> In Progress</span>;
+        return (
+          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-purple-50 text-purple-600 dark:bg-purple-900/30">
+            <Loader2 className="w-3 h-3 animate-spin" /> In Progress
+          </span>
+        );
       case "COMPLETED":
-        return <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-green-50 text-green-600 dark:bg-green-900/30"><CheckCircle2 className="w-3 h-3" /> Completed</span>;
+        return (
+          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700 dark:bg-green-900/30">
+            <CheckCircle2 className="w-3 h-3" /> Completed
+          </span>
+        );
       case "CANCELLED":
-        return <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-rose-50 text-rose-600 dark:bg-rose-900/30"><Ban className="w-3 h-3" /> Cancelled</span>;
+        return (
+          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-rose-50 text-rose-600 dark:bg-rose-900/30">
+            <Ban className="w-3 h-3" /> Cancelled
+          </span>
+        );
       case "DECLINED":
-        return <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-red-50 text-red-600 dark:bg-red-900/30"><XCircle className="w-3 h-3" /> Declined</span>;
+        return (
+          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-red-50 text-red-600 dark:bg-red-900/30">
+            <XCircle className="w-3 h-3" /> Declined
+          </span>
+        );
       default:
-        return <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-600">{status}</span>;
+        return (
+          <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-600">
+            {status}
+          </span>
+        );
     }
   };
 
-  // 🔥 ব্যাকএন্ড রেসপন্স স্ট্রাকচার অনুযায়ী ডেটা ম্যাপিং
-  const serviceName = booking.service?.title || booking.service?.name || "Service Name Not Available";
-  
-  // ব্যাকএন্ডে ডেট না থাকায় createdAt কে ডেট হিসেবে ফলব্যাক দেওয়া হলো (অথবা আপনার ব্যাকএন্ডে ডেট ফিল্ড যুক্ত করতে হবে)
+  const serviceName =
+    booking.service?.title ||
+    booking.service?.name ||
+    "Service Name Not Available";
   const rawDate = booking.bookingDate || booking.date || booking.createdAt;
-  
   const timeSlot = booking.timeSlot || "N/A";
-  
-  // ব্যাকএন্ডে অ্যাড্রেস না থাকায় সার্ভিসের লোকেশনটি এখানে দেখানো হচ্ছে
-  const address = booking.address || booking.service?.location || "Location not provided";
-  
+  const address =
+    booking.address || booking.service?.location || "Location not provided";
   const price = booking.service?.price || booking.price || 0;
 
   return (
@@ -63,7 +115,9 @@ export function BookingCard({ booking, onCancel, isCancelling }: BookingCardProp
       <div className="space-y-3">
         <div className="flex justify-between items-start gap-3">
           <div>
-            <span className="text-[11px] uppercase tracking-wider font-semibold text-blue-600 dark:text-blue-400">Service</span>
+            <span className="text-[11px] uppercase tracking-wider font-semibold text-blue-600 dark:text-blue-400">
+              Service
+            </span>
             <h3 className="text-base font-bold text-slate-900 dark:text-white">
               {serviceName}
             </h3>
@@ -92,7 +146,9 @@ export function BookingCard({ booking, onCancel, isCancelling }: BookingCardProp
             <Clock className="w-4 h-4 text-amber-500 shrink-0" />
             <div>
               <p className="text-[10px] text-slate-400">Time Slot</p>
-              <p className="font-semibold text-slate-700 dark:text-slate-200">{timeSlot}</p>
+              <p className="font-semibold text-slate-700 dark:text-slate-200">
+                {timeSlot}
+              </p>
             </div>
           </div>
         </div>
@@ -101,8 +157,12 @@ export function BookingCard({ booking, onCancel, isCancelling }: BookingCardProp
         <div className="text-xs text-slate-500 dark:text-slate-400 flex items-start gap-2 bg-slate-50/60 dark:bg-slate-800/30 p-2.5 rounded-xl">
           <MapPin className="w-4 h-4 text-rose-500 shrink-0 mt-0.5" />
           <div className="w-full">
-            <p className="text-[10px] text-slate-400">Service Location / Address</p>
-            <p className="font-semibold text-slate-700 dark:text-slate-200 break-words">{address}</p>
+            <p className="text-[10px] text-slate-400">
+              Service Location / Address
+            </p>
+            <p className="font-semibold text-slate-700 dark:text-slate-200 break-words">
+              {address}
+            </p>
           </div>
         </div>
 
@@ -118,18 +178,67 @@ export function BookingCard({ booking, onCancel, isCancelling }: BookingCardProp
           Request on: {new Date(booking.createdAt).toLocaleDateString()}
         </span>
 
-        {onCancel && booking.status === "REQUESTED" && (
-          <button
-            type="button"
-            onClick={() => onCancel(booking.id)}
-            disabled={isCancelling}
-            className="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs font-semibold rounded-lg transition-colors inline-flex items-center gap-1 cursor-pointer disabled:opacity-50"
-          >
-            {isCancelling && <Loader2 className="w-3 h-3 animate-spin" />}
-            Cancel Booking
-          </button>
-        )}
+        <div className="flex items-center gap-2">
+          {/* ACCEPTED হলে Pay Now বাটন দেখাবে */}
+          {booking.status === "ACCEPTED" && (
+            <button
+              type="button"
+              onClick={() => setIsPaymentOpen(true)}
+              className="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-lg transition-colors inline-flex items-center gap-1.5 cursor-pointer shadow-sm"
+            >
+              <CreditCard className="w-3.5 h-3.5" />
+              Pay Now
+            </button>
+          )}
+
+          {/* COMPLETED হলে Write Review বাটন দেখাবে */}
+          {booking.status === "COMPLETED" && (
+            <button
+              type="button"
+              onClick={() => setIsReviewOpen(true)}
+              className="px-3.5 py-1.5 bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold rounded-lg transition-colors inline-flex items-center gap-1.5 cursor-pointer shadow-sm"
+            >
+              <Star className="w-3.5 h-3.5 fill-current" />
+              Write Review
+            </button>
+          )}
+
+          {onCancel && booking.status === "REQUESTED" && (
+            <button
+              type="button"
+              onClick={() => onCancel(booking.id)}
+              disabled={isCancelling}
+              className="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs font-semibold rounded-lg transition-colors inline-flex items-center gap-1 cursor-pointer disabled:opacity-50"
+            >
+              {isCancelling && <Loader2 className="w-3 h-3 animate-spin" />}
+              Cancel Booking
+            </button>
+          )}
+        </div>
       </div>
+
+      {/* Stripe Modal */}
+      <CheckoutModal
+        isOpen={isPaymentOpen}
+        bookingId={booking.id}
+        amount={price}
+        onClose={() => setIsPaymentOpen(false)}
+        onSuccess={() => {
+          setIsPaymentOpen(false);
+          window.location.reload();
+        }}
+      />
+
+      {/* Review Modal */}
+      <ReviewModal
+        isOpen={isReviewOpen}
+        bookingId={booking.id}
+        onClose={() => setIsReviewOpen(false)}
+        onSuccess={() => {
+          setIsReviewOpen(false);
+          window.location.reload();
+        }}
+      />
     </div>
   );
 }

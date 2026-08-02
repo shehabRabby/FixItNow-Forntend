@@ -20,10 +20,9 @@ export default function AdminUsersPage() {
 
     const loadData = async () => {
       try {
-        // এক সাথে ইউজার লিস্ট এবং কারেন্ট লগইন করা অ্যাডমিনের প্রোফাইল আনতে পারেন
         const [usersRes, profileRes] = await Promise.all([
           axiosInstance.get("/admin/users"),
-          axiosInstance.get("/auth/me").catch(() => null), // অথবা আপনার প্রোফাইল এন্ডপয়েন্ট
+          axiosInstance.get("/auth/me").catch(() => null),
         ]);
 
         if (isMounted) {
@@ -145,7 +144,7 @@ export default function AdminUsersPage() {
             <AdminUserCard
               key={user.id}
               user={user}
-              currentAdminId={currentAdminId} // কারেন্ট অ্যাডমিনের আইডি পাস করা হলো
+              currentAdminId={currentAdminId}
               onUpdateStatus={handleUpdateStatus}
               onUpdateRole={handleUpdateRole}
               isUpdating={updatingId === user.id}

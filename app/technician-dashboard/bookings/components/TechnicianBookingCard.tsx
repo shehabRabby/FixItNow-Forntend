@@ -1,37 +1,35 @@
-import { Loader2, CheckCircle2, XCircle, Trash2, Clock, MapPin, Play, CheckCheck } from "lucide-react";
+"use client";
+
+import { Loader2, CheckCircle2, XCircle, Clock, MapPin, User, ArrowRight } from "lucide-react";
 import { IBooking } from "@/types";
 
-interface AdminBookingCardProps {
+interface TechnicianBookingCardProps {
   booking: IBooking;
   onUpdateStatus: (id: string, status: string) => void;
-  onDeleteBooking: (id: string) => void;
   isUpdating: boolean;
-  isDeleting: boolean;
 }
 
-export function AdminBookingCard({
+export function TechnicianBookingCard({
   booking,
   onUpdateStatus,
-  onDeleteBooking,
   isUpdating,
-  isDeleting,
-}: AdminBookingCardProps) {
+}: TechnicianBookingCardProps) {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "REQUESTED":
         return <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-amber-50 text-amber-600">Requested</span>;
       case "ACCEPTED":
-        return <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-600">Accepted</span>;
+        return <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-600">Accepted (Awaiting Payment)</span>;
       case "PAID":
-        return <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-600">Paid</span>;
+        return <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-purple-50 text-purple-600">Paid (Ready to Start)</span>;
       case "IN_PROGRESS":
-        return <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-purple-50 text-purple-600">In Progress</span>;
-      case "COMPLETED":
-        return <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">Completed</span>;
+        return <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-indigo-50 text-indigo-600">In Progress</span>;
       case "DECLINED":
         return <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-rose-50 text-rose-600">Declined</span>;
+      case "COMPLETED":
+        return <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-600">Completed</span>;
       case "CANCELLED":
-        return <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-600">Cancelled</span>;
+        return <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-500">Cancelled</span>;
       default:
         return <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-600">{status}</span>;
     }
@@ -42,8 +40,9 @@ export function AdminBookingCard({
       <div className="space-y-2">
         <div className="flex items-center gap-3">
           {getStatusBadge(booking.status)}
-          <span className="text-xs text-slate-400">
-            Client: <strong className="text-slate-700 dark:text-slate-300">{booking.customer?.name || "N/A"}</strong> ({booking.customer?.email})
+          <span className="text-xs text-slate-400 flex items-center gap-1">
+            <User className="w-3.5 h-3.5" />
+            Client: <strong className="text-slate-700 dark:text-slate-300">{booking.customer?.name || "N/A"}</strong>
           </span>
         </div>
 
@@ -59,15 +58,14 @@ export function AdminBookingCard({
         </div>
       </div>
 
-      {/* Action Buttons based on Booking Status */}
+      {/* Action Buttons for Technician aligned with Backend State Machine */}
       <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
-        {/* REQUESTED state actions */}
         {booking.status === "REQUESTED" && (
           <>
             <button
               type="button"
               onClick={() => onUpdateStatus(booking.id, "ACCEPTED")}
-              disabled={isUpdating || isDeleting}
+              disabled={isUpdating}
               className="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-xl transition-all cursor-pointer flex items-center gap-1 disabled:opacity-50"
             >
               {isUpdating ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CheckCircle2 className="w-3.5 h-3.5" />}
@@ -76,7 +74,7 @@ export function AdminBookingCard({
             <button
               type="button"
               onClick={() => onUpdateStatus(booking.id, "DECLINED")}
-              disabled={isUpdating || isDeleting}
+              disabled={isUpdating}
               className="px-3.5 py-2 bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs font-semibold rounded-xl transition-all cursor-pointer flex items-center gap-1 disabled:opacity-50"
             >
               {isUpdating ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <XCircle className="w-3.5 h-3.5" />}
@@ -85,42 +83,35 @@ export function AdminBookingCard({
           </>
         )}
 
-        {/* PAID state actions (User has paid, Admin can mark as In Progress) */}
+        {booking.status === "ACCEPTED" && (
+          <span className="text-xs text-amber-600 bg-amber-50 px-3 py-1.5 rounded-xl font-medium">
+            Waiting for client payment
+          </span>
+        )}
+
         {booking.status === "PAID" && (
           <button
             type="button"
             onClick={() => onUpdateStatus(booking.id, "IN_PROGRESS")}
-            disabled={isUpdating || isDeleting}
-            className="px-3.5 py-2 bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold rounded-xl transition-all cursor-pointer flex items-center gap-1 disabled:opacity-50"
+            disabled={isUpdating}
+            className="px-3.5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl transition-all cursor-pointer flex items-center gap-1 disabled:opacity-50"
           >
-            {isUpdating ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Play className="w-3.5 h-3.5" />}
-            Start Progress
+            {isUpdating ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <ArrowRight className="w-3.5 h-3.5" />}
+            Start Service (In Progress)
           </button>
         )}
 
-        {/* IN_PROGRESS state actions (Admin can mark as Completed) */}
         {booking.status === "IN_PROGRESS" && (
           <button
             type="button"
             onClick={() => onUpdateStatus(booking.id, "COMPLETED")}
-            disabled={isUpdating || isDeleting}
-            className="px-3.5 py-2 bg-green-600 hover:bg-green-700 text-white text-xs font-semibold rounded-xl transition-all cursor-pointer flex items-center gap-1 disabled:opacity-50"
+            disabled={isUpdating}
+            className="px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-xl transition-all cursor-pointer flex items-center gap-1 disabled:opacity-50"
           >
-            {isUpdating ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CheckCheck className="w-3.5 h-3.5" />}
-            Mark Complete
+            {isUpdating ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CheckCircle2 className="w-3.5 h-3.5" />}
+            Mark as Completed
           </button>
         )}
-
-        {/* Delete Button */}
-        <button
-          type="button"
-          onClick={() => onDeleteBooking(booking.id)}
-          disabled={isUpdating || isDeleting}
-          className="p-2 bg-slate-100 hover:bg-rose-50 text-slate-600 hover:text-rose-600 rounded-xl transition-all cursor-pointer disabled:opacity-50"
-          title="Delete Booking"
-        >
-          {isDeleting ? <Loader2 className="w-4 h-4 animate-spin text-rose-600" /> : <Trash2 className="w-4 h-4" />}
-        </button>
       </div>
     </div>
   );

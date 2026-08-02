@@ -12,6 +12,17 @@ interface IReview {
   rating: number;
   comment: string;
   createdAt: string;
+  booking?: {
+    service?: {
+      title?: string;
+      name?: string;
+    };
+  };
+  technicianProfile?: {
+    user?: {
+      name?: string;
+    };
+  };
   customer?: {
     name: string;
     email: string;
@@ -67,7 +78,7 @@ export default function CustomerReviewsPage() {
 
       {reviews.length === 0 ? (
         <div className="text-center py-16 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
-         <AlertCircle className="w-8 h-8 text-slate-400 mx-auto" />
+          <AlertCircle className="w-8 h-8 text-slate-400 mx-auto" />
           <p className="text-xs sm:text-sm text-slate-500 font-medium">
             No reviews found. Complete a booking to leave a review!
           </p>

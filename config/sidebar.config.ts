@@ -5,21 +5,20 @@ import {
   CalendarDays,
   FolderTree,
   BarChart3,
-  DollarSign,
   Star,
   HelpCircle,
   Layers,
+  User,
+  Clock,
+  CalendarCheck,
+  Briefcase,
+  CreditCard,
 } from "lucide-react";
 
 export const roleBaseNavItems = {
   ADMIN: [
     { label: "Dashboard", href: "/admin-dashboard", icon: LayoutDashboard },
     { label: "Users", href: "/admin-dashboard/users", icon: Users },
-    {
-      label: "Technicians",
-      href: "/admin-dashboard/technicians",
-      icon: Wrench,
-    },
     {
       label: "Bookings",
       href: "/admin-dashboard/bookings",
@@ -39,21 +38,30 @@ export const roleBaseNavItems = {
       icon: LayoutDashboard,
     },
     {
-      label: "Categories",
-      href: "/technician-dashboard/categories",
-      icon: Layers,
+      label: "Manage Services",
+      href: "/technician-dashboard/services",
+      icon: Briefcase,
     },
     {
       label: "Bookings",
       href: "/technician-dashboard/bookings",
-      icon: CalendarDays,
+      icon: CalendarCheck,
     },
     {
-      label: "Earnings",
-      href: "/technician-dashboard/earnings",
-      icon: DollarSign,
+      label: "My Profile",
+      href: "/technician-dashboard/profile",
+      icon: User,
     },
-    { label: "Reviews", href: "/technician-dashboard/reviews", icon: Star },
+    {
+      label: "Availability Slots",
+      href: "/technician-dashboard/availability",
+      icon: Clock,
+    },
+    {
+      label: "Reviews",
+      href: "/technician-dashboard/reviews", 
+      icon: Star, 
+    },
     {
       label: "Support",
       href: "/technician-dashboard/support",
@@ -67,12 +75,17 @@ export const roleBaseNavItems = {
       href: "/customer-dashboard/categories",
       icon: Layers,
     },
+    { label: "Services", href: "/customer-dashboard/services", icon: Wrench },
     {
       label: "Bookings",
       href: "/customer-dashboard/bookings",
       icon: CalendarDays,
     },
-    { label: "Services", href: "/customer-dashboard/services", icon: Wrench },
+    {
+      label: "Payment History",
+      href: "/customer-dashboard/payment-history", // path থেকে পরিবর্তন করে href করা হলো
+      icon: CreditCard,
+    },
     { label: "Reviews", href: "/customer-dashboard/reviews", icon: Star },
     { label: "Support", href: "/customer-dashboard/support", icon: HelpCircle },
   ],

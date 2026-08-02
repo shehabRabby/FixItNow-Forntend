@@ -13,7 +13,7 @@ import { IUser } from "@/types";
 
 interface AdminUserCardProps {
   user: IUser;
-  currentAdminId?: string; // লগইন করা অ্যাডমিনের আইডি নেওয়ার জন্য
+  currentAdminId?: string; // লগইন করা অ্যাডমিনের আইডি নেওয়ার জন্য
   onUpdateStatus: (id: string, status: "ACTIVE" | "BANNED") => void;
   onUpdateRole: (id: string, role: "CUSTOMER" | "TECHNICIAN" | "ADMIN") => void;
   isUpdating: boolean;
@@ -112,7 +112,7 @@ export function AdminUserCard({
             <option value="ADMIN">Admin</option>
           </select>
 
-          {/* Status Toggle Button */}
+          {/* Status Toggle Buttons (Active & Banned Both Options) */}
           {user.status === "ACTIVE" ? (
             <button
               type="button"
@@ -139,7 +139,7 @@ export function AdminUserCard({
               ) : (
                 <CheckCircle className="w-3.5 h-3.5" />
               )}
-              Unban
+              Active
             </button>
           )}
         </div>

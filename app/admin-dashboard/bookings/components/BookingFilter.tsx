@@ -6,7 +6,16 @@ interface BookingFilterProps {
 }
 
 export function BookingFilter({ selectedStatus, onSelectStatus }: BookingFilterProps) {
-  const statuses = ["ALL", "REQUESTED", "ACCEPTED", "DECLINED", "CANCELLED"];
+  const statuses = [
+    "ALL",
+    "REQUESTED",
+    "ACCEPTED",
+    "PAID",
+    "IN_PROGRESS",
+    "COMPLETED",
+    "DECLINED",
+    "CANCELLED",
+  ];
 
   return (
     <div className="flex flex-wrap items-center gap-2 pb-2">
@@ -21,7 +30,7 @@ export function BookingFilter({ selectedStatus, onSelectStatus }: BookingFilterP
               : "bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800"
           }`}
         >
-          {status.charAt(0) + status.slice(1).toLowerCase()}
+          {status.replace("_", " ")}
         </button>
       ))}
     </div>

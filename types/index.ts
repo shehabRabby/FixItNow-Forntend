@@ -113,3 +113,13 @@ export interface ApiResponse<T> {
     total: number;
   };
 }
+
+export interface IAdminOverview {
+  totalUsers: number;
+  totalBookings: number;
+  totalServices: number;
+  totalRevenue: number;
+  bookingStatusOverview: {
+    [key: string]: number;
+  };
+}

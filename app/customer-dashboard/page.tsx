@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getDashboardOverview } from "@/services/profile.service";
+import { getCustomerDashboardOverview } from "@/services/profile.service"; // সঠিক কাস্টমার সার্ভিস ফাংশন ইমপোর্ট করা হলো
 import { ICustomerOverview } from "@/types/user.interface";
 
 export default function CustomerDashboardPage() {
@@ -10,7 +10,7 @@ export default function CustomerDashboardPage() {
 
   useEffect(() => {
     const loadOverview = async () => {
-      const data = await getDashboardOverview();
+      const data = await getCustomerDashboardOverview(); // এখানে কাস্টমারের ফাংশন কল করা হলো
       setOverview(data);
       setLoading(false);
     };

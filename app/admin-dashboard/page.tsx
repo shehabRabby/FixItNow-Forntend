@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getDashboardOverview } from "@/services/profile.service";
+import { getAdminDashboardOverview } from "@/services/profile.service"; // ফাংশন নাম পরিবর্তন করা হয়েছে
 import { IAdminOverview } from "@/types/user.interface";
+import { AdminOverviewCards } from "./components/AdminOverviewCards";
+import { BookingStatusBreakdown } from "./components/BookingStatusBreakdown";
 
 export default function AdminDashboardPage() {
   const [overview, setOverview] = useState<IAdminOverview | null>(null);
@@ -10,16 +12,21 @@ export default function AdminDashboardPage() {
 
   useEffect(() => {
     const loadOverview = async () => {
-      const data = await getDashboardOverview();
-      setOverview(data);
-      setLoading(false);
+      try {
+        const data = await getAdminDashboardOverview(); // এখানে নতুন ফাংশন কল করা হলো
+        setOverview(data);
+      } catch {
+        // Handle error
+      } finally {
+        setLoading(false);
+      }
     };
     loadOverview();
   }, []);
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center p-12">
+      <div className="flex items-center justify-center min-h-[50vh]">
         <p className="text-slate-500 text-sm font-semibold animate-pulse">
           Loading dashboard data...
         </p>
@@ -34,37 +41,15 @@ export default function AdminDashboardPage() {
           Dashboard Overview
         </h1>
         <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-          Welcome back, Admin. Here whats happening today.
+          Welcome back, Admin. Here is what is happening today.
         </p>
       </div>
 
-      {/*Dynamic Overview Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
-          <p className="text-xs font-semibold text-slate-500">Total Revenue</p>
-          <p className="text-2xl font-bold text-slate-900 dark:text-white mt-2">
-            ${overview?.totalRevenue || 0}
-          </p>
-        </div>
-        <div className="p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
-          <p className="text-xs font-semibold text-slate-500">Total Customers</p>
-          <p className="text-2xl font-bold text-slate-900 dark:text-white mt-2">
-            {overview?.totalCustomers || 0}
-          </p>
-        </div>
-        <div className="p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
-          <p className="text-xs font-semibold text-slate-500">Total Technicians</p>
-          <p className="text-2xl font-bold text-slate-900 dark:text-white mt-2">
-            {overview?.totalTechnicians || 0}
-          </p>
-        </div>
-        <div className="p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
-          <p className="text-xs font-semibold text-slate-500">Total Services</p>
-          <p className="text-2xl font-bold text-slate-900 dark:text-white mt-2">
-            {overview?.totalServices || 0}
-          </p>
-        </div>
-      </div>
+      {/* Top Metrics Cards */}
+      <AdminOverviewCards overview={overview} />
+
+      {/* Booking Status Overview Section */}
+      <BookingStatusBreakdown statusOverview={overview?.bookingStatusOverview} />
     </div>
   );
 }

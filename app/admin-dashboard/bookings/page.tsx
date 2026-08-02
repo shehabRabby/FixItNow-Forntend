@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Loader2, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 import { axiosInstance } from "@/lib/axiosInstance";
-import { IBooking } from "@/types"; // গ্লোবাল টাইপ ইম্পোর্ট করা হলো
+import { IBooking } from "@/types"; 
 import { BookingFilter } from "./components/BookingFilter";
 import { AdminBookingCard } from "./components/AdminBookingCard";
 
@@ -47,7 +47,7 @@ export default function AdminBookingsPage() {
       setUpdatingId(id);
       const res = await axiosInstance.patch(`/admin/bookings/${id}/status`, { status });
       if (res.data?.success) {
-        toast.success(`Booking ${status.toLowerCase()} successfully!`);
+        toast.success(`Booking ${status.toLowerCase().replace("_", " ")} successfully!`);
         setBookings((prev) =>
           prev.map((b) => (b.id === id ? { ...b, status: status as IBooking["status"] } : b))
         );
@@ -98,7 +98,7 @@ export default function AdminBookingsPage() {
           Manage All Bookings
         </h1>
         <p className="text-sm text-slate-500">
-          Review customer service requests and manage their statuses.
+          Review customer service requests, track payments, and manage their statuses.
         </p>
       </div>
 
