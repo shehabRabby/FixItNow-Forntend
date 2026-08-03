@@ -15,14 +15,10 @@ export const axiosInstance = axios.create({
 // Request Interceptor
 axiosInstance.interceptors.request.use(
   (config) => {
-    // ১. প্রথমে কুকি থেকে অথবা লোকালস্টোরেজ থেকে টোকেন নেওয়ার চেষ্টা করবে
     let token = Cookies.get("token");
     if (!token && typeof window !== "undefined") {
       token = localStorage.getItem("token") || undefined;
     }
-
-    // কনসোলে চেক করার জন্য প্রিন্ট করে দেখাবে টোকেন পাওয়া যাচ্ছে কি না
-    console.log("Axios Interceptor Token:", token);
 
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getAllCategories } from "@/services/category.service";
+import { categoryService } from "@/services/category.service";
 import { getAllServices } from "@/services/service.service";
 
 import ServiceCard from "@/components/ui/ServiceCard";
@@ -20,9 +20,13 @@ export default function ServicesSection() {
   // Fetch Categories once
   useEffect(() => {
     const fetchCategories = async () => {
-      const res = await getAllCategories();
-      if (res.success && res.data) {
-        setCategories(res.data);
+      try {
+        const res = await categoryService.getAllCategories();
+        if (res && res.data) {
+          setCategories(res.data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch categories", error);
       }
     };
     fetchCategories();
@@ -32,18 +36,24 @@ export default function ServicesSection() {
   useEffect(() => {
     const fetchServices = async () => {
       setLoading(true);
-      const res = await getAllServices({
-        categoryId: selectedCategory || undefined,
-        searchTerm: searchTerm || undefined,
-        limit: 8, // Home page-এ প্রথম ৮টি সার্ভিস দেখাবে
-      });
+      try {
+        const res = await getAllServices({
+          categoryId: selectedCategory || undefined,
+          searchTerm: searchTerm || undefined,
+          limit: 8, // Home page-এ প্রথম ৮টি সার্ভিস দেখাবে
+        });
 
-      if (res.success && res.data) {
-        setServices(res.data);
-      } else {
+        if (res && res.success && res.data) {
+          setServices(res.data);
+        } else {
+          setServices([]);
+        }
+      } catch (error) {
+        console.error("Failed to fetch services", error);
         setServices([]);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     // Small debounce for search input

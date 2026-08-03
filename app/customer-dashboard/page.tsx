@@ -1,8 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getCustomerDashboardOverview } from "@/services/profile.service"; // সঠিক কাস্টমার সার্ভিস ফাংশন ইমপোর্ট করা হলো
-import { ICustomerOverview } from "@/types/user.interface";
+import { getCustomerDashboardOverview } from "@/services/profile.service";
+
+interface ICustomerOverview {
+  totalBookings?: number;
+  pendingPayments?: number;
+  completedJobs?: number;
+  [key: string]: string | number | undefined;
+}
 
 export default function CustomerDashboardPage() {
   const [overview, setOverview] = useState<ICustomerOverview | null>(null);
@@ -10,9 +16,14 @@ export default function CustomerDashboardPage() {
 
   useEffect(() => {
     const loadOverview = async () => {
-      const data = await getCustomerDashboardOverview(); // এখানে কাস্টমারের ফাংশন কল করা হলো
-      setOverview(data);
-      setLoading(false);
+      try {
+        const data = await getCustomerDashboardOverview();
+        setOverview(data);
+      } catch (error) {
+        console.error("Failed to load overview", error);
+      } finally {
+        setLoading(false);
+      }
     };
     loadOverview();
   }, []);
