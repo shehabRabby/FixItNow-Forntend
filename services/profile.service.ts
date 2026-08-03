@@ -1,10 +1,9 @@
-import { envConfig } from "@/config/env";
 import { IAdminOverview } from "@/types/user.interface";
 import axios from "axios";
 import Cookies from "js-cookie";
 
-const API_URL = envConfig.baseUrl;
-  // process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
+const API_URL =
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
 
 export const getMyProfile = async () => {
   const token = Cookies.get("token");

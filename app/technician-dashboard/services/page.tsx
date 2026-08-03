@@ -7,10 +7,8 @@ import { ServiceHeader } from "./components/ServiceHeader";
 import { ServiceList } from "./components/ServiceList";
 import { CreateServiceModal } from "./components/CreateServiceModal";
 import { UpdateServiceModal } from "./components/UpdateServiceModal";
-import { envConfig } from "@/config/env";
 
-const API_URL = envConfig.baseUrl;
-// process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
 
 interface IService {
   id: string;
@@ -98,7 +96,6 @@ export default function TechnicianServicesPage() {
       await axios.delete(`${API_URL}/services/${id}`, {
         headers: { Authorization: token },
       });
-    
       await fetchServices();
     } catch (error: unknown) {
       let errorMessage = "Failed to delete service";

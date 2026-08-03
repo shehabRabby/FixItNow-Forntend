@@ -1,8 +1,7 @@
-import { envConfig } from "@/config/env";
 import Cookies from "js-cookie";
 
-const API_URL = envConfig.baseUrl;
-  // process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
+const API_URL =
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
 
 export interface ICategoryPayload {
   name: string;

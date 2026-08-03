@@ -5,10 +5,8 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { IBooking } from "@/types";
 import { TechnicianBookingCard } from "./components/TechnicianBookingCard";
-import { envConfig } from "@/config/env";
 
-const API_URL = envConfig.baseUrl;
-// process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
 
 export default function TechnicianBookingsPage() {
   const [bookings, setBookings] = useState<IBooking[]>([]);
