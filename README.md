@@ -9,7 +9,7 @@
 
 - **Live Application URL:** [fix-it-now-forntend.vercel.app](https://fix-it-now-forntend.vercel.app/)
 - **Connected Backend API:** [fix-it-now-mocha.vercel.app](https://fix-it-now-mocha.vercel.app/)
-- **GitHub Repository:** [shehabRabby/FixItNow-Frontend](https://github.com/shehabRabby/FixItNow-Frontend)
+
 
 ---
 
