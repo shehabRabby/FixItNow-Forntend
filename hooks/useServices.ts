@@ -60,7 +60,12 @@ export function useServices() {
       try {
         const res = await fetch(`${API_BASE_URL}/categories`);
         const data = await res.json();
-        if (data.success) setCategories(data.data || []);
+        if (data.success) {
+          const categoriesArray = Array.isArray(data.data)
+            ? data.data
+            : data.data?.data || [];
+          setCategories(categoriesArray);
+        }
       } catch (error) {
         console.error("Error fetching categories:", error);
       }
@@ -111,8 +116,15 @@ export function useServices() {
       const data = await res.json();
 
       if (data.success) {
-        setServices(data.data || []);
-        if (data.meta) setMeta(data.meta);
+        // ব্যাকএন্ডের নেস্টেড স্ট্রাকচার অথবা সরাসরি অ্যারে হ্যান্ডেল করার জন্য
+        const servicesArray = Array.isArray(data.data)
+          ? data.data
+          : data.data?.data || [];
+
+        const metaData = data.data?.meta || data.meta;
+
+        setServices(servicesArray);
+        if (metaData) setMeta(metaData);
       } else {
         setServices([]);
       }
@@ -152,6 +164,7 @@ export function useServices() {
     updateQueryParams,
     fetchServices,
   ]);
+
   const handleFilterChange = (
     type: "search" | "category" | "location",
     val: string,
