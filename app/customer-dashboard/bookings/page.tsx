@@ -8,7 +8,7 @@ import { BookingHeader } from "./components/BookingHeader";
 import { BookingFilter } from "./components/BookingFilter";
 import { BookingCard } from "./components/BookingCard";
 
-// 🔥 ইন্টারফেসটি ব্যাকএন্ড এবং BookingCard-এর রিকোয়ারমেন্ট অনুযায়ী আপডেট করা হয়েছে
+
 interface IService {
   id: string;
   title?: string;

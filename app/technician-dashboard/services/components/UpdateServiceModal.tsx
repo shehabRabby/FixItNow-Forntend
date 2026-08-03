@@ -67,7 +67,6 @@ export function UpdateServiceModal({
         { headers: { Authorization: token } },
       );
 
-      // সফলভাবে আপডেট হওয়ার পর ডেটা রি-ফেচ করার জন্য onSuccess কল করা হচ্ছে
       await onSuccess();
       onClose();
     } catch (error: unknown) {

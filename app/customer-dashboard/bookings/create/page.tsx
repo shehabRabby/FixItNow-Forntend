@@ -6,8 +6,6 @@ import { getAllServices } from "@/services/service.service";
 import { Loader2, Calendar, MapPin, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 import { axiosInstance } from "@/lib/axiosInstance";
-
-// কম্পোনেন্টগুলো ইম্পোর্ট করা হলো
 import ServiceSelect, { IService } from "./components/ServiceSelect";
 import TimeSlotPicker from "./components/TimeSlotPicker";
 

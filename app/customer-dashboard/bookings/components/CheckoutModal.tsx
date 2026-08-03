@@ -38,7 +38,6 @@ function CheckoutForm({ bookingId, amount, onClose, onSuccess }: CheckoutFormPro
     setIsProcessing(true);
 
     try {
-      // ১. ব্যাকএন্ড থেকে পেমেন্ট ইনটেন্ট (clientSecret) নিয়ে আসা
       const intentRes = await paymentService.createPaymentIntent(bookingId);
       const clientSecret = intentRes?.data?.clientSecret;
 
@@ -49,7 +48,6 @@ function CheckoutForm({ bookingId, amount, onClose, onSuccess }: CheckoutFormPro
       const cardElement = elements.getElement(CardElement);
       if (!cardElement) return;
 
-      // ২. স্ট্রাইপে কার্ড কনফার্ম করা
       const result = await stripe.confirmCardPayment(clientSecret, {
         payment_method: {
           card: cardElement,
@@ -65,7 +63,6 @@ function CheckoutForm({ bookingId, amount, onClose, onSuccess }: CheckoutFormPro
       if (result.paymentIntent && result.paymentIntent.status === "succeeded") {
         const transactionId = result.paymentIntent.id;
 
-        // ৩. ব্যাকএন্ডে পেমেন্ট কনফার্মেশন পাঠানো
         const confirmRes = await paymentService.confirmPayment(
           bookingId,
           transactionId

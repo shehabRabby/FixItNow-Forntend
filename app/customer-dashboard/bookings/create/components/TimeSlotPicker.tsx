@@ -19,7 +19,7 @@ export default function TimeSlotPicker({ selectedSlot, onChange }: TimeSlotPicke
         <Clock className="w-3.5 h-3.5 text-blue-600" /> Time Slot
       </label>
 
-      {/* প্রি-সেট বাটনগুলো */}
+ 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
         {PRESET_TIME_SLOTS.map((slot) => {
           const isSelected = selectedSlot === slot;
@@ -41,7 +41,6 @@ export default function TimeSlotPicker({ selectedSlot, onChange }: TimeSlotPicke
         })}
       </div>
 
-      {/* কাস্টম টাইম টাইপ করার ইনপুট ফিল্ড */}
       <div className="relative">
         <input
           type="text"

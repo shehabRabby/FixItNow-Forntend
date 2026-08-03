@@ -18,8 +18,8 @@ export default function CustomerSupportPage() {
 
     try {
       setIsSubmitting(true);
-      // এখানে আপনার সাপোর্টের পোস্ট রিকোয়েস্ট বা API কল করতে পারেন
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // সিম্যুলেশন
+    
+      await new Promise((resolve) => setTimeout(resolve, 1000)); 
       toast.success("Support ticket submitted successfully!");
       setFormData({ subject: "", message: "" });
     } catch {

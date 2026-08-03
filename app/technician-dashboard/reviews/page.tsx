@@ -28,7 +28,6 @@ export default function TechnicianReviewsPage() {
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        // টেকনিশিয়ান ড্যাশবোর্ডের জন্য রিভিউ ফেচ করা
         const res = await reviewService.getAllReviews();
         setReviews(res?.data || []);
       } catch (error) {

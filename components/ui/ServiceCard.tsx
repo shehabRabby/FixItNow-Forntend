@@ -34,7 +34,7 @@ export default function ServiceCard({ service }: ServiceCardProps) {
           {service.description}
         </p>
 
-        {/* Technician Info (if available) */}
+        {/* Technician Info */}
         {service.technicianProfile?.user?.name && (
           <p className="text-[11px] text-slate-400 dark:text-slate-500">
             By:{" "}

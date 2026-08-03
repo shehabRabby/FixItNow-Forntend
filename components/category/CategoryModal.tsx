@@ -33,14 +33,14 @@ export function CategoryModal({
   editingCategory,
   isLoading,
 }: CategoryModalProps) {
-  // 🌟 useEffect বাদ দিয়ে সরাসরি useState-এ Initial State সেট করা হয়েছে
+
   const [formData, setFormData] = useState(() => ({
     name: editingCategory?.name || "",
     slug: editingCategory?.slug || "",
     description: editingCategory?.description || "",
   }));
 
-  // 🌟 Render Phase-েই Prop চেঞ্জ হলে State সিঙ্ক করা (React Docs Standard)
+  
   const [prevEditingCategory, setPrevEditingCategory] = useState(editingCategory);
   if (editingCategory !== prevEditingCategory) {
     setPrevEditingCategory(editingCategory);

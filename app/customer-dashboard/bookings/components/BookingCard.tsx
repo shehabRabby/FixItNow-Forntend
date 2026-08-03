@@ -191,7 +191,7 @@ export function BookingCard({
             </button>
           )}
 
-          {/* COMPLETED হলে Write Review বাটন দেখাবে */}
+       
           {booking.status === "COMPLETED" && (
             <button
               type="button"

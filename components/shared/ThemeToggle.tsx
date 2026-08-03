@@ -19,7 +19,7 @@ export default function ThemeToggle() {
   const mounted = useIsMounted();
 
   if (!mounted) {
-    return <div className="w-9 h-9" aria-hidden="true" />; // Placeholder skeleton
+    return <div className="w-9 h-9" aria-hidden="true" />; 
   }
 
   return (

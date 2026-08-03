@@ -10,13 +10,13 @@ import { CategoryModal } from "@/components/category/CategoryModal";
 import { DeleteConfirmationModal } from "@/components/category/DeleteConfirmationModal";
 import { CategorySkeleton } from "@/components/category/CategorySkeleton";
 
-// 💡 Hydration Safe Custom Hook (Avoids cascading renders error in React 19 / Compiler)
+// Hydration Safe Custom Hook 
 const emptySubscribe = () => () => {};
 function useHasMounted() {
   return useSyncExternalStore(
     emptySubscribe,
-    () => true,  // Client side snapshot
-    () => false  // Server side snapshot
+    () => true,  // Client side 
+    () => false  // Server side
   );
 }
 
@@ -39,10 +39,10 @@ export default function CategoriesPage() {
 
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
 
-  // ✅ React 19 Safe Hydration Check Hook
+  // Safe Hydration Check Hook
   const hasMounted = useHasMounted();
 
-  // 🔄 Categories Re-fetch function
+  // Categories Re-fetch function
   const refetchCategories = useCallback(async () => {
     try {
       const res = await categoryService.getAllCategories();
@@ -54,7 +54,7 @@ export default function CategoriesPage() {
     }
   }, []);
 
-  // 🚀 Initial Data & Auth Check
+  // Initial Data & Auth Check
   useEffect(() => {
     let isMounted = true;
 
@@ -120,11 +120,9 @@ const handleSubmit = async (formData: ICategoryPayload) => {
         toast.success("Category created successfully!");
       }
       
-      // 🌟 প্রথমে মডাল বন্ধ করুন এবং এডিটিং স্টেট ক্লিয়ার করুন
       setIsModalOpen(false);
       setEditingCategory(null);
 
-      // 🌟 ব্যাকগ্রাউন্ডে বা UI-তে নতুন ডেটা লোড করুন
       await refetchCategories();
     } catch (error: unknown) {
       const err = error as Error;
@@ -145,7 +143,7 @@ const handleSubmit = async (formData: ICategoryPayload) => {
       await categoryService.deleteCategory(targetId);
       toast.success("Category deleted successfully!");
 
-      // 🌟 Optimistic UI update
+      // Optimistic UI update
       setCategories((prev) => prev.filter((cat) => cat.id !== targetId));
 
       setIsDeleteModalOpen(false);
@@ -161,7 +159,7 @@ const handleSubmit = async (formData: ICategoryPayload) => {
     }
   };
 
-  // 🔍 Optimized Search Filter with useMemo
+  // Optimized Search Filter with useMemo
   const filteredCategories = useMemo(() => {
     const query = searchTerm.trim().toLowerCase();
     if (!query) return categories;

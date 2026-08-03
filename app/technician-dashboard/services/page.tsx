@@ -96,7 +96,7 @@ export default function TechnicianServicesPage() {
       await axios.delete(`${API_URL}/services/${id}`, {
         headers: { Authorization: token },
       });
-      // ডিলিট হওয়ার সাথে সাথে স্টেট আপডেট করার জন্য ফেচ কল করা হলো
+    
       await fetchServices();
     } catch (error: unknown) {
       let errorMessage = "Failed to delete service";

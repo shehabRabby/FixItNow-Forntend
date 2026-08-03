@@ -29,12 +29,10 @@ export interface Service {
   category?: Category;
   technicianProfileId: string;
   technicianProfile?: TechnicianProfile;
-
-  // Visual/UI/Computed Properties (Optional for Frontend compatibility)
   image?: string;
   rating?: number;
   reviewsCount?: number;
-  providerName?: string; // Optional 
+  providerName?: string; 
 }
 
 export interface Meta {

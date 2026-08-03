@@ -14,8 +14,8 @@ import {
   Search,
   Bell,
   HelpCircle,
-  Plus,
 } from "lucide-react";
+import Image from "next/image";
 
 const navItems = [
   { label: "Dashboard", href: "/admin-dashboard", icon: LayoutDashboard },
@@ -77,11 +77,15 @@ export default function AdminLayout({
         <div className="space-y-4 pt-6 border-t border-indigo-100/80">
           {/* User Profile Info */}
           <div className="flex items-center gap-3 px-2">
-            <img
-              src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80"
-              alt="Master Pro"
-              className="w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm"
-            />
+            <div className="relative w-10 h-10">
+              <Image
+                src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80"
+                alt="Master Pro"
+                fill
+                sizes="40px"
+                className="rounded-full object-cover border-2 border-white shadow-sm"
+              />
+            </div>
             <div className="overflow-hidden">
               <h4 className="text-sm font-bold text-slate-900 truncate">
                 Master Pro

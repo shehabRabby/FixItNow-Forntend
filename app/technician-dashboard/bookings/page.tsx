@@ -75,7 +75,7 @@ export default function TechnicianBookingsPage() {
     }
   };
 
-  // ফিল্টার লজিক
+
   const filteredBookings = bookings.filter((booking) => {
     if (filter === "ALL") return true;
     return booking.status === filter;

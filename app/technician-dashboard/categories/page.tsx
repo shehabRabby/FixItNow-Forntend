@@ -35,7 +35,6 @@ export default function TechnicianCategoriesPage() {
     fetchCategories();
   }, []);
 
-  // 🔍 রিয়েল-টাইম সার্চ ফিল্টার
   const filteredCategories = useMemo(() => {
     const query = searchTerm.trim().toLowerCase();
     if (!query) return categories;

@@ -7,7 +7,6 @@ export interface ICreateReviewPayload {
 }
 
 export const reviewService = {
-  // Get all reviews with optional parameters/filters
   getAllReviews: async (params?: Record<string, string | number>) => {
     const res = await axiosInstance.get("/reviews", { params });
     return res.data;

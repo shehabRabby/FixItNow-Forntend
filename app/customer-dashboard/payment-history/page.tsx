@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { paymentService } from "@/services/payment.service";
 
-// পেমেন্টের সঠিক ইন্টারফেস বা টাইপ ডিফাইন করে নেওয়া
+
 interface PaymentItem {
   id: string;
   amount: number;

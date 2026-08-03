@@ -13,7 +13,7 @@ import { IUser } from "@/types";
 
 interface AdminUserCardProps {
   user: IUser;
-  currentAdminId?: string; // লগইন করা অ্যাডমিনের আইডি নেওয়ার জন্য
+  currentAdminId?: string; 
   onUpdateStatus: (id: string, status: "ACTIVE" | "BANNED") => void;
   onUpdateRole: (id: string, role: "CUSTOMER" | "TECHNICIAN" | "ADMIN") => void;
   isUpdating: boolean;
@@ -26,7 +26,7 @@ export function AdminUserCard({
   onUpdateRole,
   isUpdating,
 }: AdminUserCardProps) {
-  // চেক করা ইউজারটি কি নিজেই লগইন করা অ্যাডমিন কি না
+
   const isSelf = currentAdminId === user.id;
 
   const getRoleBadge = (role: string) => {

@@ -13,7 +13,7 @@ export default function AdminDashboardPage() {
   useEffect(() => {
     const loadOverview = async () => {
       try {
-        const data = await getAdminDashboardOverview(); // এখানে নতুন ফাংশন কল করা হলো
+        const data = await getAdminDashboardOverview(); 
         setOverview(data);
       } catch {
         // Handle error

@@ -32,7 +32,6 @@ export const getMyProfile = async () => {
   }
 };
 
-// শুধু অ্যাডমিনের জন্য
 export const getAdminDashboardOverview =
   async (): Promise<IAdminOverview | null> => {
     const token = Cookies.get("token");
@@ -58,13 +57,11 @@ export const getAdminDashboardOverview =
     }
   };
 
-// কাস্টমারের জন্য নতুন ওভারভিউ ফাংশন
 export const getCustomerDashboardOverview = async () => {
   const token = Cookies.get("token");
   if (!token) return null;
 
   try {
-    // তোমার ব্যাকএন্ড রাউট রাউটার ফাইলের সঙ্গে মিলিয়ে এখানে '/bookings' দিতে হবে
     const res = await axios.get(`${API_URL}/bookings`, {
       headers: {
         Authorization: `${token}`,
@@ -72,8 +69,6 @@ export const getCustomerDashboardOverview = async () => {
     });
 
     const bookings = res.data?.data || [];
-
-    // ফ্রন্টএন্ডে স্ট্যাটাসগুলো হিসাব করে ওভারভিউ অবজেক্ট তৈরি করা
     const totalBookings = bookings.length;
     const completedJobs = bookings.filter(
       (b: { status: string }) =>

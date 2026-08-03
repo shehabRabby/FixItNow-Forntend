@@ -4,7 +4,7 @@ import { useState, useEffect, FormEvent } from "react";
 import { getTechnicianProfile, updateAvailabilitySlots } from "@/services/technician.service";
 import { ITechnicianProfile } from "@/types";
 
-// কিছু কমন প্রি-ডিফাইন্ড স্লট যা ইউজার এক ক্লিকে সিলেক্ট করতে পারবে
+
 const PREDEFINED_SLOTS = [
   "09:00 AM - 11:00 AM",
   "11:00 AM - 01:00 PM",
@@ -33,7 +33,6 @@ export function AvailabilitySlotsForm() {
     });
   }, []);
 
-  // স্লট টগল করার ফাংশন (ক্লিক করলে সিলেক্ট হবে, আবার ক্লিক করলে আনসিলেক্ট হবে)
   const toggleSlot = (slot: string) => {
     if (selectedSlots.includes(slot)) {
       setSelectedSlots(selectedSlots.filter((s) => s !== slot));
@@ -42,7 +41,7 @@ export function AvailabilitySlotsForm() {
     }
   };
 
-  // কাস্টম স্লট যোগ করার ফাংশন
+ 
   const handleAddCustomSlot = () => {
     if (customSlot.trim() && !selectedSlots.includes(customSlot.trim())) {
       setSelectedSlots([...selectedSlots, customSlot.trim()]);
@@ -69,7 +68,6 @@ export function AvailabilitySlotsForm() {
     <form onSubmit={handleSubmit} className="space-y-6 max-w-lg bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800">
       <h3 className="text-lg font-bold text-slate-900 dark:text-white">Manage Availability Slots</h3>
 
-      {/* প্রি-ডিফাইন্ড স্লটসমূহ (ক্লিক করে সিলেক্ট করার জন্য) */}
       <div>
         <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-2">
           Click to Select Time Slots:
@@ -95,7 +93,6 @@ export function AvailabilitySlotsForm() {
         </div>
       </div>
 
-      {/* কাস্টম স্লট যোগ করার অপশন (প্রয়োজন হলে) */}
       <div>
         <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">
           Add Custom Slot
@@ -118,7 +115,7 @@ export function AvailabilitySlotsForm() {
         </div>
       </div>
 
-      {/* বর্তমানে সিলেক্ট করা স্লটগুলোর প্রিভিউ */}
+   
       <div>
         <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">
           Selected Slots ({selectedSlots.length}):

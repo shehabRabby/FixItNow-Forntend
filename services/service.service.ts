@@ -27,7 +27,7 @@ export const getAllServices = async (params?: IServiceFilterParams) => {
     const url = `${NEXT_PUBLIC_API_URL}/services${queryString ? `?${queryString}` : ""}`;
 
     const res = await fetch(url, {
-      cache: "no-store", // Dynamic search and filter support
+      cache: "no-store", 
     });
     const data = await res.json();
     return data;

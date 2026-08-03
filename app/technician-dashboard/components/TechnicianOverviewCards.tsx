@@ -8,7 +8,6 @@ interface TechnicianOverviewCardsProps {
 }
 
 export function TechnicianOverviewCards({ profile }: TechnicianOverviewCardsProps) {
-  // সেফ চেক করে স্লট এবং স্কিল কাউন্ট বের করা
   const slotsCount = Array.isArray(profile?.availabilitySlots)
     ? profile.availabilitySlots.length
     : typeof profile?.availabilitySlots === "string"
