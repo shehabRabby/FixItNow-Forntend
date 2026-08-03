@@ -3,9 +3,10 @@
 import { useState, useEffect, useCallback } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { Service, Meta } from "@/types/service";
+import { envConfig } from "@/config/env";
 
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
+const API_BASE_URL = envConfig.baseUrl;
+  // process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
 
 function useDebounce<T>(value: T, delay: number): T {
   const [debouncedValue, setDebouncedValue] = useState<T>(value);
@@ -116,7 +117,6 @@ export function useServices() {
       const data = await res.json();
 
       if (data.success) {
-        // ব্যাকএন্ডের নেস্টেড স্ট্রাকচার অথবা সরাসরি অ্যারে হ্যান্ডেল করার জন্য
         const servicesArray = Array.isArray(data.data)
           ? data.data
           : data.data?.data || [];

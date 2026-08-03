@@ -5,14 +5,16 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { IBooking } from "@/types";
 import { TechnicianBookingCard } from "./components/TechnicianBookingCard";
+import { envConfig } from "@/config/env";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
+const API_URL = envConfig.baseUrl;
+// process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
 
 export default function TechnicianBookingsPage() {
   const [bookings, setBookings] = useState<IBooking[]>([]);
   const [loading, setLoading] = useState(true);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
-  const [filter, setFilter] = useState("ALL"); // ফিল্টারিং স্টেট যোগ করা হলো
+  const [filter, setFilter] = useState("ALL"); 
 
   const fetchBookings = async () => {
     const token = Cookies.get("token");

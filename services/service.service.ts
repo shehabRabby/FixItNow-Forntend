@@ -1,5 +1,7 @@
-const NEXT_PUBLIC_API_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
+import { envConfig } from "@/config/env";
+
+const API_URL = envConfig.baseUrl;
+  // process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
 
 export interface IServiceFilterParams {
   searchTerm?: string;
@@ -24,7 +26,7 @@ export const getAllServices = async (params?: IServiceFilterParams) => {
     if (params?.limit) query.append("limit", params.limit.toString());
 
     const queryString = query.toString();
-    const url = `${NEXT_PUBLIC_API_URL}/services${queryString ? `?${queryString}` : ""}`;
+    const url = `${API_URL}/services${queryString ? `?${queryString}` : ""}`;
 
     const res = await fetch(url, {
       cache: "no-store", 
@@ -39,7 +41,7 @@ export const getAllServices = async (params?: IServiceFilterParams) => {
 
 export const getServiceById = async (id: string) => {
   try {
-    const res = await fetch(`${NEXT_PUBLIC_API_URL}/services/${id}`, {
+    const res = await fetch(`${API_URL}/services/${id}`, {
       cache: "no-store",
     });
     const data = await res.json();

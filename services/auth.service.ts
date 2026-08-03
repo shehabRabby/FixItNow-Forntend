@@ -1,4 +1,5 @@
 
+import { envConfig } from "@/config/env";
 import Cookies from "js-cookie";
 
 export interface RegisterPayload {
@@ -31,8 +32,8 @@ export interface LoginResponseData {
   };
 }
 
-const API_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
+const API_URL = envConfig.baseUrl;
+  // process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
 
 export const authService = {
   // 🟢 Updated URL: Points to /users/register

@@ -4,9 +4,10 @@ import { useState } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { Loader2 } from "lucide-react";
+import { envConfig } from "@/config/env";
 
-const API_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
+const API_URL = envConfig.baseUrl;
+  // process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
 
 interface IService {
   id: string;

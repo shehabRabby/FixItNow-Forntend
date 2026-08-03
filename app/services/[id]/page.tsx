@@ -8,9 +8,11 @@ import { ArrowLeft, Wrench } from "lucide-react";
 import ServiceOverview from "@/components/services/ServiceOverview";
 import ServiceBookingCard from "@/components/services/ServiceBookingCard";
 import ServiceDetailsSkeleton from "@/components/services/ServiceDetailsSkeleton";
+import { envConfig } from "@/config/env";
 
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
+const API_URL = envConfig.baseUrl;
+
+  // process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -28,7 +30,7 @@ export default function ServiceDetailsPage({ params }: PageProps) {
     const fetchServiceDetails = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`${API_BASE_URL}/services/${serviceId}`);
+        const res = await fetch(`${API_URL}/services/${serviceId}`);
         const data = await res.json();
 
         if (data.success) {
