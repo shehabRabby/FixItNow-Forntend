@@ -1,22 +1,24 @@
-import { AboutHero } from "@/components/about/AboutHero";
-import { AboutMission } from "@/components/about/AboutMission";
-import { AboutStandards } from "@/components/about/AboutStandards";
-import { AboutStory } from "@/components/about/AboutStory";
-import { AboutCTA } from "@/components/about/AboutCTA";
-
-export const metadata = {
-  title: "About Us | FixItNow",
-  description: "Redefining Home Maintenance with trust and craftsmanship.",
-};
+import SmoothScrollProvider from "@/components/about/SmoothScrollProvider";
+import HeroSection from "@/components/about/HeroSection";
+import MissionSection from "@/components/about/MissionSection";
+import StorySection from "@/components/about/StorySection";
+import ValuesGrid from "@/components/about/ValuesGrid";
+import VettingSection from "@/components/about/VettingSection";
+import ImpactSection from "@/components/about/ImpactSection";
+import TeamSection from "@/components/about/TeamSection";
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100">
-      <AboutHero />
-      <AboutMission />
-      <AboutStandards />
-      <AboutStory />
-      <AboutCTA />
-    </div>
+    <SmoothScrollProvider>
+      <main className="min-h-screen bg-background text-foreground">
+        <HeroSection />
+        <MissionSection />
+        <ImpactSection />
+        <StorySection />
+        <VettingSection />
+        <ValuesGrid />
+        <TeamSection />
+      </main>
+    </SmoothScrollProvider>
   );
 }
