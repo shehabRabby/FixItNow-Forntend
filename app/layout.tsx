@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Navbar from "@/components/shared/Navbar"; // 👈 ১. Navbar ইম্পোর্ট করো
+import Navbar from "@/components/shared/Navbar"; 
 import { Toaster } from "react-hot-toast";
 import "./globals.css";
 import { Geist } from "next/font/google";

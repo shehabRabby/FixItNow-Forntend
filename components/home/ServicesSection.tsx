@@ -5,8 +5,9 @@ import { categoryService } from "@/services/category.service";
 import { getAllServices } from "@/services/service.service";
 
 import ServiceCard from "@/components/ui/ServiceCard";
-import { Loader2, Search, SlidersHorizontal } from "lucide-react";
+import { Loader2, Search, SlidersHorizontal, Sparkles } from "lucide-react";
 import { ICategory, IService } from "@/types";
+
 
 export default function ServicesSection() {
   const [categories, setCategories] = useState<ICategory[]>([]);
@@ -40,7 +41,7 @@ export default function ServicesSection() {
         const res = await getAllServices({
           categoryId: selectedCategory || undefined,
           searchTerm: searchTerm || undefined,
-          limit: 8, // Home page-এ প্রথম ৮টি সার্ভিস দেখাবে
+          limit: 8,
         });
 
         if (res && res.success && res.data) {
@@ -56,7 +57,6 @@ export default function ServicesSection() {
       }
     };
 
-    // Small debounce for search input
     const delayDebounceFn = setTimeout(() => {
       fetchServices();
     }, 400);
@@ -65,11 +65,14 @@ export default function ServicesSection() {
   }, [selectedCategory, searchTerm]);
 
   return (
-    <section className="py-12 px-4 max-w-7xl mx-auto space-y-8">
+    <section className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-10">
       {/* Header & Search */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div className="space-y-2">
+          <span className="text-xs font-semibold uppercase tracking-wider text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/60 px-3.5 py-1.5 rounded-full border border-blue-200 dark:border-blue-800 inline-flex items-center gap-1.5">
+            <Sparkles className="w-3.5 h-3.5" /> Featured Offerings
+          </span>
+          <h2 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">
             Explore Popular Services
           </h2>
           <p className="text-sm text-slate-500 dark:text-slate-400">
@@ -78,25 +81,25 @@ export default function ServicesSection() {
         </div>
 
         {/* Search Input */}
-        <div className="relative w-full md:w-72">
-          <Search className="w-4 h-4 absolute left-3 top-3 text-slate-400" />
+        <div className="relative w-full md:w-80">
+          <Search className="w-4 h-4 absolute left-3.5 top-3.5 text-slate-400" />
           <input
             type="text"
             placeholder="Search services..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 text-sm bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-white"
+            className="w-full pl-10 pr-4 py-3 text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-white shadow-sm"
           />
         </div>
       </div>
 
       {/* Category Pills */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+      <div className="flex items-center gap-2.5 overflow-x-auto pb-3 scrollbar-none">
         <button
           onClick={() => setSelectedCategory("")}
-          className={`px-4 py-2 text-xs font-semibold rounded-xl whitespace-nowrap transition-all ${
+          className={`px-5 py-2.5 text-xs font-bold rounded-xl whitespace-nowrap transition-all shadow-sm ${
             selectedCategory === ""
-              ? "bg-blue-600 text-white shadow-md shadow-blue-500/20"
+              ? "bg-blue-600 text-white shadow-lg shadow-blue-500/25 scale-105"
               : "bg-slate-100 dark:bg-slate-800/60 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800"
           }`}
         >
@@ -106,9 +109,9 @@ export default function ServicesSection() {
           <button
             key={cat.id}
             onClick={() => setSelectedCategory(cat.id)}
-            className={`px-4 py-2 text-xs font-semibold rounded-xl whitespace-nowrap transition-all ${
+            className={`px-5 py-2.5 text-xs font-bold rounded-xl whitespace-nowrap transition-all shadow-sm ${
               selectedCategory === cat.id
-                ? "bg-blue-600 text-white shadow-md shadow-blue-500/20"
+                ? "bg-blue-600 text-white shadow-lg shadow-blue-500/25 scale-105"
                 : "bg-slate-100 dark:bg-slate-800/60 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800"
             }`}
           >
@@ -119,8 +122,8 @@ export default function ServicesSection() {
 
       {/* Services Grid */}
       {loading ? (
-        <div className="flex items-center justify-center py-20">
-          <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+        <div className="flex items-center justify-center py-28">
+          <Loader2 className="w-10 h-10 animate-spin text-blue-600" />
         </div>
       ) : services.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -129,12 +132,12 @@ export default function ServicesSection() {
           ))}
         </div>
       ) : (
-        <div className="text-center py-16 border border-dashed border-slate-200 dark:border-slate-800 rounded-2xl">
-          <SlidersHorizontal className="w-8 h-8 mx-auto text-slate-400 mb-2" />
-          <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+        <div className="text-center py-20 border border-dashed border-slate-200 dark:border-slate-800 rounded-3xl bg-slate-50/50 dark:bg-slate-900/50">
+          <SlidersHorizontal className="w-10 h-10 mx-auto text-slate-400 mb-3" />
+          <p className="text-base font-bold text-slate-700 dark:text-slate-300">
             No services found
           </p>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-slate-500 mt-1">
             Try searching for something else or clear the filters.
           </p>
         </div>
