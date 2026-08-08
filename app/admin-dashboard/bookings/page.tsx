@@ -92,28 +92,31 @@ export default function AdminBookingsPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-slate-900 dark:text-white">
+    <div className="space-y-6 max-w-7xl mx-auto pb-12 px-4 sm:px-6">
+      {/* Header Section */}
+      <div className="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-1">
+        <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
           Manage All Bookings
         </h1>
-        <p className="text-sm text-slate-500">
-          Review customer service requests, track payments, and manage their statuses.
+        <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+          Review customer service requests, track payments, and manage their statuses seamlessly.
         </p>
       </div>
 
       {/* Filter Tabs */}
-      <BookingFilter
-        selectedStatus={selectedStatus}
-        onSelectStatus={setSelectedStatus}
-      />
+      <div className="overflow-x-auto pb-2">
+        <BookingFilter
+          selectedStatus={selectedStatus}
+          onSelectStatus={setSelectedStatus}
+        />
+      </div>
 
       {/* Bookings List */}
       <div className="grid grid-cols-1 gap-4">
         {filteredBookings.length === 0 ? (
-          <div className="text-center py-16 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
+          <div className="text-center py-16 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 space-y-2">
             <AlertCircle className="w-8 h-8 text-slate-400 mx-auto" />
-            <p className="text-sm text-slate-500">No bookings found for this filter.</p>
+            <p className="text-sm font-semibold text-slate-500">No bookings found for this filter.</p>
           </div>
         ) : (
           filteredBookings.map((booking) => (

@@ -109,7 +109,7 @@ export default function CategoriesPage() {
     }
   };
 
-const handleSubmit = async (formData: ICategoryPayload) => {
+  const handleSubmit = async (formData: ICategoryPayload) => {
     setIsSubmitting(true);
     try {
       if (editingCategory) {
@@ -175,20 +175,20 @@ const handleSubmit = async (formData: ICategoryPayload) => {
   }
 
   return (
-    <div className="space-y-8 p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto min-h-screen">
+    <div className="space-y-6 sm:space-y-8 p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto min-h-screen">
       {/* Header Banner */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm">
-        <div className="space-y-1">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white dark:bg-slate-900 p-4 sm:p-6 lg:p-8 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-sm">
+        <div className="space-y-1.5 w-full sm:w-auto">
           <div className="flex items-center space-x-2.5">
-            <div className="p-2 bg-blue-50 dark:bg-blue-900/30 text-blue-600 rounded-xl">
+            <div className="p-2.5 bg-blue-50 dark:bg-blue-950/60 text-blue-600 rounded-2xl border border-blue-100 dark:border-blue-900/50 shrink-0">
               <Layers className="w-5 h-5" />
             </div>
-            <h1 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-black text-slate-900 dark:text-white tracking-tight break-words">
               Categories Management
             </h1>
           </div>
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
-            Explore and manage service categories for FixItNow
+          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-normal">
+            Explore and manage service categories seamlessly.
           </p>
         </div>
 
@@ -196,7 +196,7 @@ const handleSubmit = async (formData: ICategoryPayload) => {
           <button
             type="button"
             onClick={handleOpenCreateModal}
-            className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-medium px-4 py-2.5 rounded-xl transition-all shadow-sm text-xs sm:text-sm cursor-pointer"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-semibold px-5 py-3 rounded-2xl transition-all shadow-xs text-xs sm:text-sm cursor-pointer shrink-0"
           >
             <Plus className="w-4 h-4" />
             <span>Add New Category</span>
@@ -206,17 +206,17 @@ const handleSubmit = async (formData: ICategoryPayload) => {
 
       {/* Filter Bar */}
       <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-4">
-        <div className="relative flex-1 max-w-md">
-          <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+        <div className="relative flex-1 w-full sm:max-w-md">
+          <Search className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
           <input
             type="text"
             placeholder="Search category by name..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-slate-800 dark:text-slate-100 placeholder:text-slate-400"
+            className="w-full pl-11 pr-4 py-3 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-slate-800 dark:text-slate-100 placeholder:text-slate-400 shadow-xs"
           />
         </div>
-        <div className="text-xs text-slate-500 font-medium self-end sm:self-center">
+        <div className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium self-end sm:self-center px-1">
           Total Categories:{" "}
           <span className="font-bold text-slate-800 dark:text-slate-200">
             {filteredCategories.length}
@@ -228,13 +228,13 @@ const handleSubmit = async (formData: ICategoryPayload) => {
       {isLoading ? (
         <CategorySkeleton />
       ) : filteredCategories.length === 0 ? (
-        <div className="text-center py-16 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800">
-          <p className="text-xs sm:text-sm text-slate-500">
-            No categories found.
+        <div className="text-center py-16 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-sm px-4">
+          <p className="text-xs sm:text-sm font-semibold text-slate-500">
+            No categories found for this search.
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
           {filteredCategories.map((cat) => (
             <CategoryCard
               key={cat.id}

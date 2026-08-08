@@ -14,18 +14,26 @@ export default function AdminLayout({
 
   useEffect(() => {
     const fetchProfile = async () => {
-      const data = await getMyProfile();
-      setProfile(data);
+      try {
+        const data = await getMyProfile();
+        setProfile(data);
+      } catch (error) {
+        console.error("Failed to fetch admin profile", error);
+      }
     };
     fetchProfile();
   }, []);
 
   return (
-    <div className="flex min-h-screen bg-slate-50/50 dark:bg-slate-950">
+    <div className="flex min-h-screen bg-slate-50/70 dark:bg-slate-950 font-sans selection:bg-blue-500 selection:text-white relative">
+      {/* Sidebar Component: এটি ডেস্কটপে ফিক্সড সাইডবার হিসেবে থাকবে */}
       <DashboardSidebar role="ADMIN" userProfile={profile} />
 
-      <div className="flex-1 flex flex-col min-w-0">
-        <main className="p-8 flex-1">{children}</main>
+      {/* Main Content Area: ছোট স্ক্রিন থেকে শুরু করে সব ডিভাইসে ফুল উইডথ ও সুন্দরভাবে দেখাবে */}
+      <div className="flex-1 flex flex-col min-w-0 overflow-x-hidden w-full">
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto">
+          {children}
+        </main>
       </div>
     </div>
   );

@@ -18,7 +18,6 @@ interface CategoryCardProps {
   onDelete: (id: string) => void;
 }
 
-
 const getCategoryImageUrl = (name: string = "") => {
   const imagePool = [
     "https://images.unsplash.com/photo-1581578731548-c64695cc6952?q=80&w=600&auto=format&fit=crop",
@@ -47,10 +46,10 @@ export function CategoryCard({
   const categoryId = category?.id || category?._id || "";
 
   return (
-    <div className="group bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-md hover:border-blue-500/30 transition-all duration-300 flex flex-col justify-between">
+    <div className="group bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-md hover:border-blue-500/30 transition-all duration-300 flex flex-col justify-between w-full">
       <div>
         {/* Banner / Image */}
-        <div className="relative h-36 w-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
+        <div className="relative h-40 sm:h-36 w-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
           <Image
             src={imageUrl}
             alt={category?.name || "Category image"}
@@ -59,15 +58,15 @@ export function CategoryCard({
             className="object-cover group-hover:scale-105 transition-transform duration-500"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent" />
-          <div className="absolute bottom-3 left-3 flex items-center gap-1.5 bg-blue-600/90 backdrop-blur-md text-white text-[11px] font-mono font-medium px-2.5 py-1 rounded-lg shadow-sm">
-            <Tag className="w-3 h-3" />
-            <span>/{category?.slug || "no-slug"}</span>
+          <div className="absolute bottom-3 left-3 flex items-center gap-1.5 bg-blue-600/90 backdrop-blur-md text-white text-[11px] font-mono font-medium px-2.5 py-1 rounded-lg shadow-sm max-w-[85%] truncate">
+            <Tag className="w-3 h-3 shrink-0" />
+            <span className="truncate">/{category?.slug || "no-slug"}</span>
           </div>
         </div>
 
         {/* Content */}
-        <div className="p-5 space-y-2">
-          <h3 className="text-lg font-bold text-slate-900 dark:text-white capitalize group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+        <div className="p-4 sm:p-5 space-y-2">
+          <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white capitalize group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors break-words">
             {category?.name || "Untitled Category"}
           </h3>
           <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
@@ -82,19 +81,19 @@ export function CategoryCard({
           <button
             type="button"
             onClick={() => onEdit(category)}
-            className="p-2 text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-xl transition-all duration-200 text-xs font-medium flex items-center gap-1 cursor-pointer"
+            className="px-3 py-2 text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-xl transition-all duration-200 text-xs font-medium flex items-center gap-1 cursor-pointer"
             title="Edit Category"
           >
-            <Edit3 className="w-3.5 h-3.5" />
+            <Edit3 className="w-3.5 h-3.5 shrink-0" />
             <span>Edit</span>
           </button>
           <button
             type="button"
             onClick={() => onDelete(categoryId)}
-            className="p-2 text-slate-600 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-xl transition-all duration-200 text-xs font-medium flex items-center gap-1 cursor-pointer"
+            className="px-3 py-2 text-slate-600 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-xl transition-all duration-200 text-xs font-medium flex items-center gap-1 cursor-pointer"
             title="Delete Category"
           >
-            <Trash2 className="w-3.5 h-3.5" />
+            <Trash2 className="w-3.5 h-3.5 shrink-0" />
             <span>Delete</span>
           </button>
         </div>

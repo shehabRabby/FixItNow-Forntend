@@ -7,11 +7,11 @@ export function ReportMetricsGrid() {
       {reportMetrics.map((item, index) => (
         <div
           key={index}
-          className="p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-2"
+          className="p-4 sm:p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-2"
         >
           <p className="text-xs font-semibold text-slate-500">{item.title}</p>
           <div className="flex items-baseline justify-between">
-            <h3 className="text-2xl font-bold text-slate-900 dark:text-white">
+            <h3 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">
               {item.value}
             </h3>
             <span
