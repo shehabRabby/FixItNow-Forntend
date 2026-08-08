@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { ShieldCheck, Star } from 'lucide-react';
 import RegisterForm from '@/components/modules/auth/RegisterForm';
 import AuthHeader from '@/components/modules/auth/AuthHeader';
-import AuthFooter from '@/components/modules/auth/AuthFooter';
+
 
 export default function RegisterPage() {
   return (
@@ -70,8 +70,6 @@ export default function RegisterPage() {
         </motion.div>
       </main>
 
-      {/* Footer */}
-      <AuthFooter />
     </div>
   );
 }

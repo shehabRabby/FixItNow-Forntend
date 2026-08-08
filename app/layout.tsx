@@ -4,6 +4,7 @@ import { Toaster } from "react-hot-toast";
 import "./globals.css";
 import { Geist } from "next/font/google";
 import { cn } from "@/lib/utils";
+import Footer from "@/components/shared/Footer";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -22,6 +23,7 @@ export default function RootLayout({
       <body className="antialiased">
         <Navbar />
         {children}
+        <Footer />
         <Toaster position="top-right" />
       </body>
     </html>

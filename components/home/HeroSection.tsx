@@ -12,17 +12,107 @@ import {
   ArrowRight,
   CheckCircle2,
 } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, useMotionValue, useSpring, animate, useInView } from "framer-motion";
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
+
+/* ------------------------------------------------------------------ */
+/* Count-up stat — animates from 0 once it enters the viewport         */
+/* ------------------------------------------------------------------ */
+function CountUp({
+  value,
+  decimals = 0,
+  suffix = "",
+}: {
+  value: number;
+  decimals?: number;
+  suffix?: string;
+}) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-40px" });
+  const [display, setDisplay] = useState((0).toFixed(decimals));
+
+  useEffect(() => {
+    if (!inView) return;
+    const controls = animate(0, value, {
+      duration: 1.5,
+      ease: [0.16, 1, 0.3, 1],
+      onUpdate(v) {
+        setDisplay(
+          decimals > 0
+            ? v.toFixed(decimals)
+            : Math.round(v).toLocaleString("en-US"),
+        );
+      },
+    });
+    return () => controls.stop();
+  }, [inView, value, decimals]);
+
+  return (
+    <span ref={ref}>
+      {display}
+      {suffix}
+    </span>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Magnetic wrapper — child follows the cursor slightly, snaps back    */
+/* ------------------------------------------------------------------ */
+function Magnetic({
+  children,
+  strength = 0.35,
+  className,
+}: {
+  children: React.ReactNode;
+  strength?: number;
+  className?: string;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const springX = useSpring(x, { stiffness: 150, damping: 14, mass: 0.25 });
+  const springY = useSpring(y, { stiffness: 150, damping: 14, mass: 0.25 });
+
+  const onMouseMove = (e: React.MouseEvent) => {
+    const rect = ref.current?.getBoundingClientRect();
+    if (!rect) return;
+    x.set((e.clientX - rect.left - rect.width / 2) * strength);
+    y.set((e.clientY - rect.top - rect.height / 2) * strength);
+  };
+  const onMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
+
+  return (
+    <motion.div
+      ref={ref}
+      onMouseMove={onMouseMove}
+      onMouseLeave={onMouseLeave}
+      style={{ x: springX, y: springY }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
 
 export default function HeroSection() {
   const [searchTerm, setSearchTerm] = useState("");
   const [location, setLocation] = useState("");
   const router = useRouter();
-  const heroRef = useRef(null);
+  const heroRef = useRef<HTMLElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
+  const ticketRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
+      // entrance
       gsap.fromTo(
         ".hero-title-anim",
         { y: 60, opacity: 0 },
@@ -33,6 +123,30 @@ export default function HeroSection() {
         { scaleX: 0 },
         { scaleX: 1, duration: 1.4, ease: "power2.inOut", delay: 0.2 },
       );
+
+      // scroll parallax — background grid drifts slower than content
+      gsap.to(gridRef.current, {
+        yPercent: 18,
+        ease: "none",
+        scrollTrigger: {
+          trigger: heroRef.current,
+          start: "top top",
+          end: "bottom top",
+          scrub: true,
+        },
+      });
+
+      // scroll parallax — ticket card drifts opposite, adds depth
+      gsap.to(ticketRef.current, {
+        yPercent: -10,
+        ease: "none",
+        scrollTrigger: {
+          trigger: heroRef.current,
+          start: "top top",
+          end: "bottom top",
+          scrub: true,
+        },
+      });
     }, heroRef);
     return () => ctx.revert();
   }, []);
@@ -46,11 +160,18 @@ export default function HeroSection() {
     router.push(queryString ? `/services?${queryString}` : "/services");
   };
 
+  const stats = [
+    { icon: Star, value: 4.9, decimals: 1, suffix: "/5 average rating" },
+    { icon: ShieldCheck, value: 100, decimals: 0, suffix: "% background checked" },
+    { icon: CheckCircle2, value: 12400, decimals: 0, suffix: "+ tickets closed" },
+  ];
+
   return (
     <section ref={heroRef} className="relative overflow-hidden bg-background">
-      {/* Faint structural grid — built from foreground at low opacity, no custom hue */}
+      {/* Faint structural grid — parallax layer */}
       <div
-        className="absolute inset-0 opacity-[0.05] pointer-events-none"
+        ref={gridRef}
+        className="absolute inset-0 opacity-[0.05] pointer-events-none will-change-transform"
         style={{
           backgroundImage:
             "linear-gradient(var(--foreground) 1px, transparent 1px), linear-gradient(90deg, var(--foreground) 1px, transparent 1px)",
@@ -65,12 +186,15 @@ export default function HeroSection() {
         }}
       />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-28 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-2 py-16 lg:py-28 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center relative z-10">
         {/* Left Side Content */}
         <div className="lg:col-span-7 space-y-8">
           {/* Eyebrow */}
           <div className="flex items-center gap-3">
-            <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-500 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-600" />
+            </span>
             <span className="font-mono text-[11px] sm:text-xs tracking-[0.25em] text-muted-foreground uppercase">
               Ticket status: open
             </span>
@@ -89,11 +213,14 @@ export default function HeroSection() {
                 viewBox="0 0 200 8"
                 preserveAspectRatio="none"
               >
-                <path
+                <motion.path
                   d="M0,5 Q50,0 100,5 T200,5"
                   stroke="currentColor"
                   strokeWidth="3"
                   fill="none"
+                  initial={{ pathLength: 0 }}
+                  animate={{ pathLength: 1 }}
+                  transition={{ duration: 1, delay: 0.9, ease: "easeInOut" }}
                 />
               </svg>
             </span>
@@ -117,20 +244,16 @@ export default function HeroSection() {
             </Link>
           </div>
 
-          {/* Trust stubs */}
+          {/* Trust stubs — now animated counters */}
           <div className="hero-title-anim flex flex-wrap items-center gap-3 pt-2">
-            {[
-              { icon: Star, label: "4.9/5 average rating" },
-              { icon: ShieldCheck, label: "100% background checked" },
-              { icon: CheckCircle2, label: "12,400+ tickets closed" },
-            ].map(({ icon: Icon, label }) => (
+            {stats.map(({ icon: Icon, value, decimals, suffix }) => (
               <div
-                key={label}
-                className="flex items-center gap-1.5 border border-border rounded-sm px-3 py-1.5 bg-card/50"
+                key={suffix}
+                className="flex items-center gap-1.5 border border-border rounded-sm px-3 py-1.5 bg-card/50 transition-colors hover:border-blue-300 dark:hover:border-blue-800"
               >
-                <Icon className="w-3.5 h-3.5 text-foreground" />
-                <span className="text-[11px] font-mono text-muted-foreground tracking-wide">
-                  {label}
+                <Icon className="w-3.5 h-3.5 text-foreground shrink-0" />
+                <span className="text-[11px] font-mono text-muted-foreground tracking-wide tabular-nums">
+                  <CountUp value={value} decimals={decimals} suffix={suffix} />
                 </span>
               </div>
             ))}
@@ -139,15 +262,29 @@ export default function HeroSection() {
 
         {/* Right Side — the Service Ticket */}
         <motion.div
+          ref={ticketRef}
           initial={{ opacity: 0, y: 30, rotate: -3 }}
-          animate={{ opacity: 1, y: 0, rotate: -1 }}
-          transition={{ duration: 0.7, delay: 0.3, ease: "easeOut" }}
-          whileHover={{ rotate: 0 }}
-          className="lg:col-span-5 relative"
+          animate={{
+            opacity: 1,
+            y: [0, -8, 0],
+            rotate: -1,
+          }}
+          transition={{
+            opacity: { duration: 0.7, delay: 0.3, ease: "easeOut" },
+            y: { duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 },
+            rotate: { duration: 0.7, delay: 0.3, ease: "easeOut" },
+          }}
+          whileHover={{ rotate: 0, y: 0 }}
+          className="lg:col-span-5 relative will-change-transform"
         >
           <div className="relative bg-card text-card-foreground rounded-lg border border-border shadow-2xl shadow-black/10">
             {/* Verified stamp */}
-            <div className="absolute -top-5 -right-4 z-20 rotate-[9deg] select-none">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.6, rotate: 9 }}
+              animate={{ opacity: 1, scale: 1, rotate: 9 }}
+              transition={{ duration: 0.5, delay: 1.1, ease: "backOut" }}
+              className="absolute -top-5 -right-4 z-20 select-none"
+            >
               <div className="border-2 border-blue-600 text-blue-700 rounded-sm px-3 py-1.5 bg-card">
                 <span className="font-mono text-[10px] font-bold tracking-[0.15em] uppercase leading-none block">
                   Verified
@@ -155,7 +292,7 @@ export default function HeroSection() {
                   Pro Match
                 </span>
               </div>
-            </div>
+            </motion.div>
 
             {/* Job photo */}
             <div className="px-5 pt-4">
@@ -168,6 +305,7 @@ export default function HeroSection() {
                   className="object-cover grayscale-[20%] contrast-[1.05]"
                   priority
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
               </div>
             </div>
 
@@ -205,12 +343,14 @@ export default function HeroSection() {
                 </div>
               </div>
 
-              <button
-                type="submit"
-                className="w-full bg-gradient-to-r from-blue-700 via-blue-600 to-indigo-700 text-white hover:opacity-90 active:scale-[0.98] font-mono font-bold text-xs tracking-[0.15em] uppercase py-3.5 rounded-md transition-all cursor-pointer mt-1 shadow-lg shadow-blue-600/25"
-              >
-                Open Ticket &amp; Match Me
-              </button>
+              <Magnetic strength={0.25} className="block">
+                <button
+                  type="submit"
+                  className="w-full bg-gradient-to-r from-blue-700 via-blue-600 to-indigo-700 text-white hover:opacity-90 active:scale-[0.98] font-mono font-bold text-xs tracking-[0.15em] uppercase py-3.5 rounded-md transition-all cursor-pointer mt-1 shadow-lg shadow-blue-600/25"
+                >
+                  Open Ticket &amp; Match Me
+                </button>
+              </Magnetic>
             </form>
 
             {/* Perforated tear edge */}
