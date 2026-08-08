@@ -7,15 +7,20 @@ export interface Category {
 
 export interface TechnicianUser {
   id?: string;
-  name: string;
-  email: string;
+  name?: string;
+  email?: string;
   image?: string;
 }
 
 export interface TechnicianProfile {
   id: string;
+  userId?: string;
   bio?: string;
   experience?: number;
+  experienceYears?: number; // ব্যাকএন্ড থেকে আসার জন্য
+  skills?: string;          // ব্যাকএন্ড থেকে আসার জন্য
+  availabilitySlots?: string; // ব্যাকএন্ড থেকে আসার জন্য
+  ratingAverage?: number;   // ব্যাকএন্ড থেকে আসার জন্য
   user?: TechnicianUser;
 }
 
