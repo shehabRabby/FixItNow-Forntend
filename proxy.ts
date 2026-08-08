@@ -16,6 +16,8 @@ const roleBasedRoutes: Record<string, string> = {
 };
 
 export default function proxy(request: NextRequest) {
+  
+  
   const { pathname } = request.nextUrl;
 
   const token = request.cookies.get("token")?.value;
