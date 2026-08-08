@@ -11,10 +11,10 @@ import {
   MapPin,
   CreditCard,
   Star,
+  Sparkles,
 } from "lucide-react";
 import CheckoutModal from "./CheckoutModal";
 import ReviewModal from "../../reviews/components/ReviewModal";
-
 
 interface BookingCardProps {
   booking: {
@@ -45,55 +45,55 @@ export function BookingCard({
   isCancelling,
 }: BookingCardProps) {
   const [isPaymentOpen, setIsPaymentOpen] = useState(false);
-  const [isReviewOpen, setIsReviewOpen] = useState(false); // রিভিউ মোডালের জন্য স্টেট
+  const [isReviewOpen, setIsReviewOpen] = useState(false);
 
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "REQUESTED":
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-amber-50 text-amber-600 dark:bg-amber-900/30">
-            <Clock className="w-3 h-3" /> Requested
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-500/10 text-amber-600 dark:bg-amber-950/40 border border-amber-500/20">
+            <Clock className="w-3.5 h-3.5" /> Requested
           </span>
         );
       case "ACCEPTED":
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-600 dark:bg-blue-900/30">
-            <CheckCircle2 className="w-3 h-3" /> Accepted
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-blue-500/10 text-blue-600 dark:bg-blue-950/40 border border-blue-500/20">
+            <CheckCircle2 className="w-3.5 h-3.5" /> Accepted
           </span>
         );
       case "PAID":
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-600 dark:bg-emerald-900/30">
-            <CheckCircle2 className="w-3 h-3" /> Paid
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-600 dark:bg-emerald-950/40 border border-emerald-500/20">
+            <CheckCircle2 className="w-3.5 h-3.5" /> Paid
           </span>
         );
       case "IN_PROGRESS":
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-purple-50 text-purple-600 dark:bg-purple-900/30">
-            <Loader2 className="w-3 h-3 animate-spin" /> In Progress
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-purple-500/10 text-purple-600 dark:bg-purple-950/40 border border-purple-500/20">
+            <Loader2 className="w-3.5 h-3.5 animate-spin" /> In Progress
           </span>
         );
       case "COMPLETED":
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700 dark:bg-green-900/30">
-            <CheckCircle2 className="w-3 h-3" /> Completed
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-green-500/10 text-green-600 dark:bg-green-950/40 border border-green-500/20">
+            <CheckCircle2 className="w-3.5 h-3.5" /> Completed
           </span>
         );
       case "CANCELLED":
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-rose-50 text-rose-600 dark:bg-rose-900/30">
-            <Ban className="w-3 h-3" /> Cancelled
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-rose-500/10 text-rose-600 dark:bg-rose-950/40 border border-rose-500/20">
+            <Ban className="w-3.5 h-3.5" /> Cancelled
           </span>
         );
       case "DECLINED":
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-red-50 text-red-600 dark:bg-red-900/30">
-            <XCircle className="w-3 h-3" /> Declined
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-red-500/10 text-red-600 dark:bg-red-950/40 border border-red-500/20">
+            <XCircle className="w-3.5 h-3.5" /> Declined
           </span>
         );
       default:
         return (
-          <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-600">
+          <span className="px-3 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300">
             {status}
           </span>
         );
@@ -111,18 +111,23 @@ export function BookingCard({
   const price = booking.service?.price || booking.price || 0;
 
   return (
-    <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-5">
-      <div className="space-y-3">
-        <div className="flex justify-between items-start gap-3">
-          <div>
-            <span className="text-[11px] uppercase tracking-wider font-semibold text-blue-600 dark:text-blue-400">
-              Service
-            </span>
-            <h3 className="text-base font-bold text-slate-900 dark:text-white">
+    <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-sm hover:shadow-xl hover:border-blue-500/30 transition-all duration-300 flex flex-col justify-between space-y-6 group relative overflow-hidden">
+      
+      {/* Accent glow on top hover */}
+      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 to-indigo-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+
+      <div className="space-y-4">
+        <div className="flex justify-between items-start gap-4">
+          <div className="space-y-1">
+            <div className="flex items-center gap-1.5 text-[11px] uppercase tracking-wider font-extrabold text-blue-600 dark:text-blue-400">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Service Request</span>
+            </div>
+            <h3 className="text-lg font-black text-slate-900 dark:text-white tracking-tight group-hover:text-blue-600 transition-colors">
               {serviceName}
             </h3>
             {booking.service?.description && (
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">
+              <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
                 {booking.service.description}
               </p>
             )}
@@ -131,22 +136,26 @@ export function BookingCard({
         </div>
 
         {/* Date & Time Slot Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
-          <div className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-2 bg-slate-50/60 dark:bg-slate-800/30 p-2.5 rounded-xl">
-            <Calendar className="w-4 h-4 text-blue-500 shrink-0" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-3 bg-slate-50/80 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800 p-3 rounded-2xl">
+            <div className="p-2 bg-blue-50 dark:bg-blue-950/60 text-blue-600 rounded-xl">
+              <Calendar className="w-4 h-4" />
+            </div>
             <div>
-              <p className="text-[10px] text-slate-400">Booking Date</p>
-              <p className="font-semibold text-slate-700 dark:text-slate-200">
-                {rawDate ? new Date(rawDate).toLocaleDateString() : "N/A"}
+              <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Booking Date</p>
+              <p className="font-bold text-slate-800 dark:text-slate-200 mt-0.5">
+                {rawDate ? new Date(rawDate).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "N/A"}
               </p>
             </div>
           </div>
 
-          <div className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-2 bg-slate-50/60 dark:bg-slate-800/30 p-2.5 rounded-xl">
-            <Clock className="w-4 h-4 text-amber-500 shrink-0" />
+          <div className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-3 bg-slate-50/80 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800 p-3 rounded-2xl">
+            <div className="p-2 bg-amber-50 dark:bg-amber-950/60 text-amber-600 rounded-xl">
+              <Clock className="w-4 h-4" />
+            </div>
             <div>
-              <p className="text-[10px] text-slate-400">Time Slot</p>
-              <p className="font-semibold text-slate-700 dark:text-slate-200">
+              <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Time Slot</p>
+              <p className="font-bold text-slate-800 dark:text-slate-200 mt-0.5">
                 {timeSlot}
               </p>
             </div>
@@ -154,52 +163,52 @@ export function BookingCard({
         </div>
 
         {/* Address / Location */}
-        <div className="text-xs text-slate-500 dark:text-slate-400 flex items-start gap-2 bg-slate-50/60 dark:bg-slate-800/30 p-2.5 rounded-xl">
-          <MapPin className="w-4 h-4 text-rose-500 shrink-0 mt-0.5" />
+        <div className="text-xs text-slate-500 dark:text-slate-400 flex items-start gap-3 bg-slate-50/80 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800 p-3 rounded-2xl">
+          <div className="p-2 bg-rose-50 dark:bg-rose-950/60 text-rose-600 rounded-xl shrink-0 mt-0.5">
+            <MapPin className="w-4 h-4" />
+          </div>
           <div className="w-full">
-            <p className="text-[10px] text-slate-400">
+            <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
               Service Location / Address
             </p>
-            <p className="font-semibold text-slate-700 dark:text-slate-200 break-words">
+            <p className="font-bold text-slate-800 dark:text-slate-200 break-words mt-0.5">
               {address}
             </p>
           </div>
         </div>
 
-        {/* Price */}
-        <div className="flex justify-between items-center pt-2 px-1">
-          <span className="text-xs text-slate-500">Total Price:</span>
-          <span className="font-bold text-emerald-600 text-base">৳{price}</span>
+        {/* Price Box */}
+        <div className="flex justify-between items-center bg-emerald-500/5 border border-emerald-500/10 px-4 py-3 rounded-2xl">
+          <span className="text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider">Total Amount:</span>
+          <span className="font-black text-emerald-600 text-lg">৳{price.toLocaleString()}</span>
         </div>
       </div>
 
-      <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-        <span className="text-[11px] text-slate-400">
-          Request on: {new Date(booking.createdAt).toLocaleDateString()}
+      <div className="pt-4 border-t border-slate-100 dark:border-slate-800/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <span className="text-[11px] font-semibold text-slate-400">
+          Requested on: {new Date(booking.createdAt).toLocaleDateString()}
         </span>
 
-        <div className="flex items-center gap-2">
-          {/* ACCEPTED হলে Pay Now বাটন দেখাবে */}
+        <div className="flex items-center gap-2.5 w-full sm:w-auto justify-end">
           {booking.status === "ACCEPTED" && (
             <button
               type="button"
               onClick={() => setIsPaymentOpen(true)}
-              className="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-lg transition-colors inline-flex items-center gap-1.5 cursor-pointer shadow-sm"
+              className="w-full sm:w-auto px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl transition-all shadow-md shadow-emerald-600/20 inline-flex items-center justify-center gap-2 cursor-pointer active:scale-95"
             >
-              <CreditCard className="w-3.5 h-3.5" />
-              Pay Now
+              <CreditCard className="w-4 h-4" />
+              <span>Pay Now</span>
             </button>
           )}
 
-       
           {booking.status === "COMPLETED" && (
             <button
               type="button"
               onClick={() => setIsReviewOpen(true)}
-              className="px-3.5 py-1.5 bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold rounded-lg transition-colors inline-flex items-center gap-1.5 cursor-pointer shadow-sm"
+              className="w-full sm:w-auto px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold rounded-xl transition-all shadow-md shadow-amber-500/20 inline-flex items-center justify-center gap-2 cursor-pointer active:scale-95"
             >
-              <Star className="w-3.5 h-3.5 fill-current" />
-              Write Review
+              <Star className="w-4 h-4 fill-current" />
+              <span>Write Review</span>
             </button>
           )}
 
@@ -208,10 +217,10 @@ export function BookingCard({
               type="button"
               onClick={() => onCancel(booking.id)}
               disabled={isCancelling}
-              className="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs font-semibold rounded-lg transition-colors inline-flex items-center gap-1 cursor-pointer disabled:opacity-50"
+              className="w-full sm:w-auto px-4 py-2 bg-rose-50 hover:bg-rose-100 text-rose-600 dark:bg-rose-950/40 dark:hover:bg-rose-900/50 text-xs font-bold rounded-xl transition-all inline-flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 active:scale-95 border border-rose-100 dark:border-rose-900/50"
             >
-              {isCancelling && <Loader2 className="w-3 h-3 animate-spin" />}
-              Cancel Booking
+              {isCancelling && <Loader2 className="w-4 h-4 animate-spin" />}
+              <span>Cancel Booking</span>
             </button>
           )}
         </div>

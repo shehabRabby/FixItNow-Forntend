@@ -5,11 +5,12 @@ interface BookingFilterProps {
 
 export function BookingFilter({ filterStatus, setFilterStatus }: BookingFilterProps) {
   return (
-    <div className="flex justify-end">
+    <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+      <span className="text-xs font-bold text-slate-400 hidden sm:inline">Filter:</span>
       <select
         value={filterStatus}
         onChange={(e) => setFilterStatus(e.target.value)}
-        className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-xs rounded-xl px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500/20 shadow-sm cursor-pointer"
+        className="w-full sm:w-auto bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-xs font-bold rounded-2xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm cursor-pointer transition-all"
       >
         <option value="ALL">All Bookings</option>
         <option value="REQUESTED">Requested</option>
