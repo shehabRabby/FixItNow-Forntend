@@ -3,7 +3,7 @@
 import { useState, useEffect, FormEvent } from "react";
 import { getTechnicianProfile, updateAvailabilitySlots } from "@/services/technician.service";
 import { ITechnicianProfile } from "@/types";
-
+import { Clock, Plus, Check } from "lucide-react";
 
 const PREDEFINED_SLOTS = [
   "09:00 AM - 11:00 AM",
@@ -41,7 +41,6 @@ export function AvailabilitySlotsForm() {
     }
   };
 
- 
   const handleAddCustomSlot = () => {
     if (customSlot.trim() && !selectedSlots.includes(customSlot.trim())) {
       setSelectedSlots([...selectedSlots, customSlot.trim()]);
@@ -62,14 +61,26 @@ export function AvailabilitySlotsForm() {
     }
   };
 
-  if (loading) return <p className="text-sm text-slate-500">Loading...</p>;
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-8">
+        <p className="text-xs text-slate-400 font-medium animate-pulse">Loading slots...</p>
+      </div>
+    );
+  }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 max-w-lg bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800">
-      <h3 className="text-lg font-bold text-slate-900 dark:text-white">Manage Availability Slots</h3>
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-4">
+        <Clock className="w-5 h-5 text-emerald-600" />
+        <h3 className="text-base font-bold text-slate-900 dark:text-white">
+          Manage Availability Slots
+        </h3>
+      </div>
 
-      <div>
-        <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-2">
+      {/* Predefined Slots */}
+      <div className="space-y-2">
+        <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400">
           Click to Select Time Slots:
         </label>
         <div className="flex flex-wrap gap-2">
@@ -80,21 +91,27 @@ export function AvailabilitySlotsForm() {
                 type="button"
                 key={slot}
                 onClick={() => toggleSlot(slot)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all border ${
+                className={`px-3 py-2 rounded-xl text-xs font-medium transition-all border flex items-center gap-1.5 cursor-pointer ${
                   isSelected
-                    ? "bg-emerald-600 text-white border-emerald-600 shadow-sm"
-                    : "bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-emerald-500"
+                    ? "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800 shadow-sm"
+                    : "bg-slate-50/50 dark:bg-slate-800/50 text-slate-700 dark:text-slate-300 border-slate-200/80 dark:border-slate-700 hover:border-emerald-500"
                 }`}
               >
-                {slot} {isSelected ? "✓" : "+"}
+                <span>{slot}</span>
+                {isSelected ? (
+                  <Check className="w-3.5 h-3.5 text-emerald-600" />
+                ) : (
+                  <Plus className="w-3.5 h-3.5 text-slate-400" />
+                )}
               </button>
             );
           })}
         </div>
       </div>
 
-      <div>
-        <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">
+      {/* Add Custom Slot */}
+      <div className="space-y-2">
+        <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400">
           Add Custom Slot
         </label>
         <div className="flex gap-2">
@@ -103,50 +120,53 @@ export function AvailabilitySlotsForm() {
             value={customSlot}
             onChange={(e) => setCustomSlot(e.target.value)}
             placeholder="e.g. 08:00 PM - 10:00 PM"
-            className="w-full px-3 py-2 rounded-lg border text-sm bg-slate-50 dark:bg-slate-800"
+            className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs bg-slate-50/50 dark:bg-slate-800/50 text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500 transition-all"
           />
           <button
             type="button"
             onClick={handleAddCustomSlot}
-            className="px-4 py-2 bg-slate-800 dark:bg-slate-700 text-white rounded-lg text-xs font-semibold hover:bg-slate-900"
+            className="px-4 py-2.5 bg-slate-900 dark:bg-slate-800 hover:bg-slate-800 text-white rounded-xl text-xs font-semibold transition-all cursor-pointer shrink-0"
           >
             Add
           </button>
         </div>
       </div>
 
-   
-      <div>
-        <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">
+      {/* Selected Slots List */}
+      <div className="space-y-2">
+        <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400">
           Selected Slots ({selectedSlots.length}):
         </label>
-        <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 min-h-[45px] flex flex-wrap gap-1.5 items-center">
+        <div className="p-4 rounded-2xl bg-slate-50/50 dark:bg-slate-800/30 border border-slate-200/80 dark:border-slate-700/80 min-h-[50px] flex flex-wrap gap-2 items-center">
           {selectedSlots.length > 0 ? (
             selectedSlots.map((slot, idx) => (
               <span
                 key={idx}
-                className="inline-flex items-center gap-1 px-2.5 py-1 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 rounded-md text-xs font-medium border border-emerald-200 dark:border-emerald-800"
+                className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 rounded-xl text-xs font-medium border border-emerald-200/80 dark:border-emerald-800/80"
               >
-                {slot}
+                <span>{slot}</span>
                 <button
                   type="button"
                   onClick={() => toggleSlot(slot)}
-                  className="text-emerald-500 hover:text-rose-600 ml-1 font-bold"
+                  className="text-emerald-500 hover:text-rose-600 font-bold ml-0.5 cursor-pointer"
                 >
                   ×
                 </button>
               </span>
             ))
           ) : (
-            <span className="text-xs text-slate-400">No slots selected yet. Click above to add.</span>
+            <span className="text-xs text-slate-400 font-normal">
+              No slots selected yet. Click above to add.
+            </span>
           )}
         </div>
       </div>
 
+      {/* Submit Button */}
       <button
         type="submit"
         disabled={saving}
-        className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-semibold disabled:opacity-50 transition-all"
+        className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl text-xs font-bold disabled:opacity-50 transition-all shadow-sm cursor-pointer"
       >
         {saving ? "Saving Slots..." : "Save Availability Slots"}
       </button>

@@ -14,8 +14,12 @@ export default function TechnicianLayout({
 
   useEffect(() => {
     const fetchProfile = async () => {
-      const data = await getMyProfile();
-      setProfile(data);
+      try {
+        const data = await getMyProfile();
+        setProfile(data);
+      } catch (error) {
+        console.error("Failed to load user profile for layout", error);
+      }
     };
     fetchProfile();
   }, []);
@@ -25,7 +29,7 @@ export default function TechnicianLayout({
       <DashboardSidebar role="TECHNICIAN" userProfile={profile} />
 
       <div className="flex-1 flex flex-col min-w-0">
-        <main className="p-8 flex-1">{children}</main>
+        <main className="p-4 sm:p-6 lg:p-8 flex-1">{children}</main>
       </div>
     </div>
   );
