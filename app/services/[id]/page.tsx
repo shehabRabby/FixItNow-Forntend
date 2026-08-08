@@ -6,11 +6,12 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Service } from "@/types/service";
-import { ArrowLeft, Wrench, Sparkles, Star } from "lucide-react";
+import { ArrowLeft, Wrench,Star } from "lucide-react";
 
 import ServiceOverview from "@/components/services/ServiceOverview";
 import ServiceBookingCard from "@/components/services/ServiceBookingCard";
 import ServiceDetailsSkeleton from "@/components/services/ServiceDetailsSkeleton";
+import PopularServices from "@/components/services/PopularServices"; // আপনার পাথ অনুযায়ী ঠিক করে নিতে পারেন
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
@@ -149,6 +150,11 @@ export default function ServiceDetailsPage({ params }: PageProps) {
             />
           </div>
         </motion.div>
+
+        {/* Popular Services Component Added Here */}
+        <div className="mt-16">
+          <PopularServices />
+        </div>
       </div>
     </div>
   );

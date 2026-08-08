@@ -4,6 +4,7 @@ import ServiceFilters from "@/components/services/ServiceFilters";
 import { useServices } from "@/hooks/useServices";
 import ServiceGrid from "@/components/services/serviceGrid";
 
+
 export default function ServicesContent() {
   const {
     services,

@@ -11,21 +11,27 @@ export function SocialCTA() {
         </h3>
         <div className="flex justify-center items-center space-x-3">
           <a
-            href="#"
+            href="https://www.facebook.com"
+            target="_blank"
+            rel="noopener noreferrer"
             className="w-10 h-10 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-all"
             aria-label="Facebook"
           >
             <FaFacebookF className="w-4 h-4" />
           </a>
           <a
-            href="#"
+            href="https://twitter.com"
+            target="_blank"
+            rel="noopener noreferrer"
             className="w-10 h-10 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-all"
             aria-label="Twitter"
           >
             <FaTwitter className="w-4 h-4" />
           </a>
           <a
-            href="#"
+            href="https://www.instagram.com"
+            target="_blank"
+            rel="noopener noreferrer"
             className="w-10 h-10 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-all"
             aria-label="Instagram"
           >
